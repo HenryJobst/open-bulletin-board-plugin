@@ -242,10 +242,10 @@ class OlBerlinPlugin
         $capabilities = array(
             // Meta capabilities
             'edit_post' => self::EDIT_INTERAKTIV,
-	        'read_post' => self::READ_INTERAKTIV,
-	        'delete_post' => self::DELETE_INTERAKTIV,
+            'read_post' => self::READ_INTERAKTIV,
+            'delete_post' => self::DELETE_INTERAKTIV,
 
-	        // Primitive capabilities used outside of map_meta_cap():
+            // Primitive capabilities used outside of map_meta_cap():
             'edit_posts' => self::EDIT_INTERAKTIVS,
             'edit_others_posts' => self::EDIT_OTHERS_INTERAKTIVS,
             'publish_posts' => self::PUBLISH_INTERAKTIVS,
@@ -281,7 +281,7 @@ class OlBerlinPlugin
             'publicly_queryable' => true,
             'capabilities' => $capabilities,
             'delete_with_user' => false, // keep content when user will be deleted or trashed
-            'rewrite' => array( 'slug' => __(self::INTERAKTIV), 'with_front' => false),
+            'rewrite' => array('slug' => __(self::INTERAKTIV), 'with_front' => false),
         );
         register_post_type(self::INTERAKTIV, $args);
         flush_rewrite_rules();

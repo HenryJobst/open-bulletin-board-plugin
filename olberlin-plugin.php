@@ -3,8 +3,9 @@
 /*
 Plugin Name: olberlin-plugin
 Plugin URI: https://github.com/HenryJobst/olberlin-plugin
-Description: This plugin initialise a raw wordpress installation with a bunch of special extra requirements.
-Version: 1.0.0
+Description: This plugin initialise a raw wordpress installation with a bunch of special extra requirements and a new
+custom post type "Interaktiv", which is editable for all registered users.
+Version: 1.0.1
 Author: Henry Jobst
 Author URI: https://github.com/HenryJobst
 Text Domain: olberlin-plugin
@@ -68,7 +69,7 @@ class OlBerlinPlugin
     const DELETE_OTHERS_INTERAKTIVS = 'delete_others_interaktivs';
     const EDIT_PRIVATE_INTERAKTIVS = 'edit_private_interaktivs';
     const EDIT_PUBLISHED_INTERAKTIVS = 'edit_published_interaktivs';
-    const CREATE_INTERAKTIVS = 'edit_interaktivs';
+    const CREATE_INTERAKTIVS = 'create_interaktivs';
 
     // other capabilities
     const UPLOAD_FILES = 'upload_files';
@@ -142,45 +143,51 @@ class OlBerlinPlugin
 
     function enable_edit_interaktiv_for_all()
     {
-        foreach (array(self::SUBSCRIBER /*, self::CONTRIBUTOR, self::AUTHOR, self::EDITOR, self::ADMIN*/) as $role_name) {
+        foreach (array(self::SUBSCRIBER, self::CONTRIBUTOR, self::AUTHOR, self::EDITOR, self::ADMIN) as $role_name) {
             $role = get_role($role_name);
-            $role->add_cap(self::READ_INTERAKTIV);
             $role->add_cap(self::CREATE_INTERAKTIVS);
-            $role->add_cap(self::EDIT_INTERAKTIV);
-            $role->add_cap(self::DELETE_INTERAKTIV);
+            $role->add_cap(self::EDIT_INTERAKTIVS);
+            $role->add_cap(self::DELETE_INTERAKTIVS);
             $role->add_cap(self::PUBLISH_INTERAKTIVS);
         }
     }
 
     function disable_edit_interaktiv_for_all()
     {
-        foreach (array(self::SUBSCRIBER /*, self::CONTRIBUTOR, self::AUTHOR, self::EDITOR, self::ADMIN*/) as $role_name) {
+        foreach (array(self::SUBSCRIBER, self::CONTRIBUTOR, self::AUTHOR, self::EDITOR, self::ADMIN) as $role_name) {
             $role = get_role($role_name);
-            $role->remove_cap(self::READ_INTERAKTIV);
             $role->remove_cap(self::CREATE_INTERAKTIVS);
-            $role->remove_cap(self::EDIT_INTERAKTIV);
-            $role->remove_cap(self::DELETE_INTERAKTIV);
+            $role->remove_cap(self::EDIT_INTERAKTIVS);
+            $role->remove_cap(self::DELETE_INTERAKTIVS);
             $role->remove_cap(self::PUBLISH_INTERAKTIVS);
         }
     }
 
     function enable_others_interaktiv_for_editor()
     {
-        foreach (array(self::EDITOR /*, self::ADMIN*/) as $role_name) {
+        foreach (array(self::EDITOR, self::ADMIN) as $role_name) {
             $role = get_role($role_name);
             $role->add_cap(self::EDIT_OTHERS_INTERAKTIVS);
             $role->add_cap(self::DELETE_OTHERS_INTERAKTIVS);
             $role->add_cap(self::READ_PRIVATE_INTERAKTIVS);
+            $role->add_cap(self::EDIT_PUBLISHED_INTERAKTIVS);
+            $role->add_cap(self::EDIT_PRIVATE_INTERAKTIVS);
+            $role->add_cap(self::DELETE_PUBLISHED_INTERAKTIVS);
+            $role->add_cap(self::DELETE_PRIVATE_INTERAKTIVS);
         }
     }
 
     function disable_others_interaktiv_for_editor()
     {
-        foreach (array(self::EDITOR /*, self::ADMIN*/) as $role_name) {
+        foreach (array(self::EDITOR, self::ADMIN) as $role_name) {
             $role = get_role($role_name);
             $role->remove_cap(self::EDIT_OTHERS_INTERAKTIVS);
             $role->remove_cap(self::DELETE_OTHERS_INTERAKTIVS);
             $role->remove_cap(self::READ_PRIVATE_INTERAKTIVS);
+            $role->remove_cap(self::EDIT_PUBLISHED_INTERAKTIVS);
+            $role->remove_cap(self::EDIT_PRIVATE_INTERAKTIVS);
+            $role->remove_cap(self::DELETE_PUBLISHED_INTERAKTIVS);
+            $role->remove_cap(self::DELETE_PRIVATE_INTERAKTIVS);
         }
     }
 
@@ -231,24 +238,36 @@ class OlBerlinPlugin
             'items_list_navigation' => __('Eintragsliste Navigation'),
             'filter_items_list' => __('Filtere Eintragsliste'),
         );
-        /*
+
         $capabilities = array(
-            'read_posts' => self::READ_INTERAKTIVS,
-            'create_posts' => self::CREATE_INTERAKTIVS,
+            // Meta capabilities
+            'edit_post' => self::EDIT_INTERAKTIV,
+	        'read_post' => self::READ_INTERAKTIV,
+	        'delete_post' => self::DELETE_INTERAKTIV,
+
+	        // Primitive capabilities used outside of map_meta_cap():
             'edit_posts' => self::EDIT_INTERAKTIVS,
-            'delete_posts' => self::DELETE_INTERAKTIVS,
-            'publish_posts' => self::PUBLISH_INTERAKTIVS,
-            'delete_others_posts' => self::DELETE_OTHERS_INTERAKTIVS,
             'edit_others_posts' => self::EDIT_OTHERS_INTERAKTIVS,
+            'publish_posts' => self::PUBLISH_INTERAKTIVS,
             'read_private_posts' => self::READ_PRIVATE_INTERAKTIVS,
+
+            // Primitive capabilities used within map_meta_cap():
+            'read' => self::READ,
+            'delete_posts' => self::DELETE_INTERAKTIVS,
+            'delete_private_posts' => self::DELETE_PRIVATE_INTERAKTIVS,
+            'delete_published_posts' => self::DELETE_PUBLISHED_INTERAKTIVS,
+            'delete_others_posts' => self::DELETE_OTHERS_INTERAKTIVS,
+            'edit_private_posts' => self::DELETE_PRIVATE_INTERAKTIVS,
+            'edit_published_posts' => self::EDIT_PUBLISHED_INTERAKTIVS,
+            'create_posts' => self::CREATE_INTERAKTIVS,
         );
-        */
+
         $args = array(
-            'label' => 'Interaktiv',
-            'description' => 'Grünes Brett etc.',
+            'label' => __('Interaktiv'),
+            'description' => __('Grünes Brett etc.'),
             'labels' => $labels,
             'supports' => array('title', 'author', 'editor', 'comments'),
-            'taxonomies' => array(),
+            //'taxonomies' => array(),
             'hierarchical' => false,
             'public' => true,
             'show_ui' => true,
@@ -260,12 +279,12 @@ class OlBerlinPlugin
             'has_archive' => true,
             'exclude_from_search' => false,
             'publicly_queryable' => true,
-            'capability_type' => 'interaktiv',
-            //'capabilities' => $capabilities,
-            'map_meta_cap' => true,
-            'show_in_rest' => true,
+            'capabilities' => $capabilities,
+            'delete_with_user' => false, // keep content when user will be deleted or trashed
+            'rewrite' => array( 'slug' => __(self::INTERAKTIV), 'with_front' => false),
         );
         register_post_type(self::INTERAKTIV, $args);
+        flush_rewrite_rules();
     }
 
     function unregister_interaktiv()

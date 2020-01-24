@@ -79,6 +79,8 @@ class OlBerlinPlugin
     function __construct()
     {
         add_action('init', array($this, 'register_interaktiv'));
+        add_filter('map_meta_cap', array($this, 'interaktiv_map_meta_cap'), 10, 4);
+        add_action('pre_get_posts', array($this, 'add_interaktiv_to_post_type'));
     }
 
     function activate()
@@ -284,7 +286,49 @@ class OlBerlinPlugin
             'rewrite' => array('slug' => __(self::INTERAKTIV), 'with_front' => false),
         );
         register_post_type(self::INTERAKTIV, $args);
+
         flush_rewrite_rules();
+
+    }
+
+    function add_interaktiv_to_post_type($query)
+    {
+        if ((is_home() && $query->is_main_query()) || is_feed()) {
+            $query->set('post_type', array('post', self::INTERAKTIV));
+        }
+    }
+
+    function interaktiv_map_meta_cap($caps, $cap, $user_id, $args)
+    {
+        /* If editing, deleting, or reading a entry, get the post and post type object. */
+        if (self::EDIT_INTERAKTIV == $cap || self::DELETE_INTERAKTIV == $cap || self::READ_INTERAKTIV == $cap) {
+            $post = get_post($args[0]);
+            $post_type = get_post_type_object($post->post_type);
+            $caps = array();
+        }
+
+        /* If editing a entry, assign the required capability. */
+        if (self::EDIT_INTERAKTIV == $cap) {
+            if ($user_id == $post->post_author)
+                $caps[] = $post_type->cap->edit_posts;
+            else
+                $caps[] = $post_type->cap->edit_others_posts;
+        } /* If deleting a entry, assign the required capability. */
+        elseif (self::DELETE_INTERAKTIV == $cap) {
+            if ($user_id == $post->post_author)
+                $caps[] = $post_type->cap->delete_posts;
+            else
+                $caps[] = $post_type->cap->delete_others_posts;
+        } /* If reading a entry, assign the required capability. */
+        elseif (self::READ_INTERAKTIV == $cap) {
+            if ('private' != $post->post_status)
+                $caps[] = self::READ;
+            elseif ($user_id == $post->post_author)
+                $caps[] = self::READ;
+            else
+                $caps[] = $post_type->cap->read_private_posts;
+        }
+        return $caps;
     }
 
     function unregister_interaktiv()

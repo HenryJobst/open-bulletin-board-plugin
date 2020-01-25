@@ -1,21 +1,20 @@
-=== olberlin-plugin ===
+=== interaktiv-plugin ===
 Requires at least: 5.3.2
 License: MIT License
 
-Das Plugin legt Kategorien an, erweitert Rechte und legt den Inhaltstyp "Interaktiv" an.
+Das Plugin legt den Inhaltstyp "Interaktiv" an.
 
 == Beschreibung ==
-
-Das Plugin legt die Kategorien News und Berichte an.
-
-Es werden ein paar Rechte erweitert:
-
-*   Redakteure dürfen Benutzer anlegen und ändern,
-*   Mitarbeiter dürfen Medien hinzufügen,
 
 Es wird der Inhaltstyp "Interaktiv" hinzugefügt, welcher bereits von einem Abonnent bearbeitet werden kann.
 
 == Changelog ==
+
+= 1.0.3 =
+* Plugin umbenannt
+
+= 1.0.2 =
+* Anlegen von Kategorien und Erweiterung der Standardrechte in separates Plugin ausgelagert
 
 = 1.0.1 =
 * Rechte für der Inhaltstyp "Interaktiv" verbessert und Eigenschaften verbessert

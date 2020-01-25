@@ -3,7 +3,7 @@
 /*
  * This file is called when plugin will be uninstalled.
  *
- * @package olberlin-plugin
+ * @package interaktiv-plugin
  */
 
 if (! defined('WP_UNINSTALL_PLUGIN')) {

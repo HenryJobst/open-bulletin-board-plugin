@@ -1,14 +1,13 @@
 <?php
 
 /*
-Plugin Name: olberlin-plugin
-Plugin URI: https://github.com/HenryJobst/olberlin-plugin
-Description: This plugin initialise a raw wordpress installation with a bunch of special extra requirements and a new
-custom post type "Interaktiv", which is editable for all registered users.
-Version: 1.0.1
+Plugin Name: Interaktiv Plugin
+Plugin URI: https://github.com/HenryJobst/interaktiv-plugin
+Description: This plugin add a new custom post type "Interaktiv", which is editable for all registered users.
+Version: 1.0.3
 Author: Henry Jobst
 Author URI: https://github.com/HenryJobst
-Text Domain: olberlin-plugin
+Text Domain: interaktiv-plugin
 License: MIT License
 
 Copyright (c) 2020 {Author}
@@ -34,14 +33,10 @@ SOFTWARE.
 
 defined('ABSPATH') or die;
 
-class OlBerlinPlugin
+class InteraktivPlugin
 {
     // post type name
     const INTERAKTIV = 'interaktiv';
-
-    // categories
-    const BERICHTE = 'Berichte';
-    const NEWS = 'News';
 
     // roles
     const SUBSCRIBER = 'subscriber';
@@ -71,11 +66,6 @@ class OlBerlinPlugin
     const EDIT_PUBLISHED_INTERAKTIVS = 'edit_published_interaktivs';
     const CREATE_INTERAKTIVS = 'create_interaktivs';
 
-    // other capabilities
-    const UPLOAD_FILES = 'upload_files';
-    const EDIT_USERS = 'edit_users';
-    const PROMOTE_USERS = 'promote_users';
-
     function __construct()
     {
         add_action('init', array($this, 'register_interaktiv'));
@@ -85,8 +75,6 @@ class OlBerlinPlugin
 
     function activate()
     {
-        $this->create_categories();
-        $this->create_tags();
         $this->set_rights();
         flush_rewrite_rules();
     }
@@ -96,51 +84,6 @@ class OlBerlinPlugin
         $this->unset_rights();
         $this->unregister_interaktiv();
         flush_rewrite_rules();
-    }
-
-    function create_categories()
-    {
-        $news_id = get_cat_ID(self::NEWS);
-        $report_id = get_cat_ID(self::BERICHTE);
-
-        if ($news_id == 0) {
-            $news_id = wp_create_category(self::NEWS);
-        }
-        if ($report_id == 0) {
-            $report_id = wp_create_category(self::BERICHTE);
-        }
-
-        return array($news_id, $report_id);
-    }
-
-    function create_tags()
-    {
-    }
-
-    function enable_upload_for_contributor()
-    {
-        $authorRole = get_role(self::CONTRIBUTOR);
-        $authorRole->add_cap(self::UPLOAD_FILES);
-    }
-
-    function disable_upload_for_contributor()
-    {
-        $authorRole = get_role(self::CONTRIBUTOR);
-        $authorRole->remove_cap(self::UPLOAD_FILES);
-    }
-
-    function enable_edit_users_for_editor()
-    {
-        $editorRole = get_role(self::EDITOR);
-        $editorRole->add_cap(self::EDIT_USERS);
-        $editorRole->add_cap(self::PROMOTE_USERS);
-    }
-
-    function disable_edit_users_for_editor()
-    {
-        $editorRole = get_role(self::EDITOR);
-        $editorRole->remove_cap(self::EDIT_USERS);
-        $editorRole->remove_cap(self::PROMOTE_USERS);
     }
 
     function enable_edit_interaktiv_for_all()
@@ -195,16 +138,12 @@ class OlBerlinPlugin
 
     function set_rights()
     {
-        $this->enable_edit_users_for_editor();
-        $this->enable_upload_for_contributor();
         $this->enable_edit_interaktiv_for_all();
         $this->enable_others_interaktiv_for_editor();
     }
 
     function unset_rights()
     {
-        $this->disable_edit_users_for_editor();
-        $this->disable_upload_for_contributor();
         $this->disable_edit_interaktiv_for_all();
         $this->disable_others_interaktiv_for_editor();
     }
@@ -338,7 +277,7 @@ class OlBerlinPlugin
 
 }
 
-$plugin = new OlBerlinPlugin();
+$plugin = new InteraktivPlugin();
 
 register_activation_hook(__FILE__, array($plugin, 'activate'));
 register_deactivation_hook(__FILE__, array($plugin, 'deactivate'));

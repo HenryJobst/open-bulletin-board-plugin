@@ -76,6 +76,7 @@ class InteraktivPlugin
     const POST_FORMATS = 'post-formats';
     const POST_TYPE = 'post_type';
     const POST = 'post';
+    const EDIT_COMMENT = 'edit_comment';
 
     function __construct()
     {
@@ -274,6 +275,9 @@ class InteraktivPlugin
             $post_type = get_post_type_object($post->post_type);
             $caps = array();
         }
+        elseif (self::EDIT_COMMENT == $cap) {
+            $comment = get_comment($args[0]);
+        }
 
         /* If editing a entry, assign the required capability. */
         if (self::EDIT_INTERAKTIV == $cap) {
@@ -295,6 +299,10 @@ class InteraktivPlugin
                 $caps[] = self::READ;
             else
                 $caps[] = $post_type->cap->read_private_posts;
+        }
+        elseif (self::EDIT_COMMENT == $cap) {
+            if ($user_id != $comment->user_id)
+			    $caps[] = 'moderate_comments';
         }
         return $caps;
     }

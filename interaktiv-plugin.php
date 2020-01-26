@@ -42,11 +42,11 @@ class InteraktivPlugin
     const INTERAKTIV_PLUGIN_TEXT_DOMAIN = 'interaktiv-plugin-text-domain';
 
     // roles
-    const SUBSCRIBER = 'subscriber';
-    const CONTRIBUTOR = 'contributor';
-    const AUTHOR = 'author';
-    const EDITOR = 'editor';
-    const ADMIN = 'administrator';
+    const SUBSCRIBER_ROLE = 'subscriber';
+    const CONTRIBUTOR_ROLE = 'contributor';
+    const AUTHOR_ROLE = 'author';
+    const EDITOR_ROLE = 'editor';
+    const ADMIN_ROLE = 'administrator';
 
     // Meta capabilities
     const EDIT_INTERAKTIV = 'edit_interaktiv';
@@ -69,14 +69,22 @@ class InteraktivPlugin
     const EDIT_PUBLISHED_INTERAKTIVS = 'edit_published_interaktivs';
     const CREATE_INTERAKTIVS = 'create_interaktivs';
 
+    const EDIT_COMMENT = 'edit_comment';
+
 
     const ADD_FILTER_PRIORITY = 10;
-    const ADD_FILTER_PARAMETER_COUNT = 4;
+    const ADD_FILTER_PARAMETER_COUNT2 = 2;
+    const ADD_FILTER_PARAMETER_COUNT4 = 4;
 
     const POST_FORMATS = 'post-formats';
     const POST_TYPE = 'post_type';
     const POST = 'post';
-    const EDIT_COMMENT = 'edit_comment';
+
+    // columns
+    const CONTENT = 'content';
+    const COMMENT_COUNT = 'comment_count';
+    const AUTHOR = 'author';
+    const ORDERBY = 'orderby';
 
     function __construct()
     {
@@ -85,7 +93,7 @@ class InteraktivPlugin
 
         // set special mapping function for per post capabilities
         add_filter('map_meta_cap', array($this, 'interaktiv_map_meta_cap'),
-            self::ADD_FILTER_PRIORITY, self::ADD_FILTER_PARAMETER_COUNT);
+            self::ADD_FILTER_PRIORITY, self::ADD_FILTER_PARAMETER_COUNT4);
 
         // add custom post type to standard post loop
         add_action('pre_get_posts', array($this, 'add_interaktiv_to_post_type'));
@@ -97,6 +105,17 @@ class InteraktivPlugin
 
         // Filter the default post format.
         add_filter('option_default_post_format', array($this, 'interaktiv_default_post_format_filter'));
+
+        // Set columns for custom post type
+        add_filter('manage_edit-interaktiv_columns', array($this, 'interaktiv_columns'));
+
+        // Set custom columns for custom post type
+        add_action('manage_interaktiv_posts_custom_column', array($this, 'manage_interaktiv_columns'),
+            self::ADD_FILTER_PRIORITY, self::ADD_FILTER_PARAMETER_COUNT2);
+
+        // Set custom sortable columns for custom post type
+        add_filter('manage_edit-interaktiv_sortable_columns', array($this, 'interaktiv_sortable_columns'));
+
     }
 
     function activate()
@@ -114,7 +133,7 @@ class InteraktivPlugin
 
     function enable_edit_interaktiv_for_all()
     {
-        foreach (array(self::SUBSCRIBER, self::CONTRIBUTOR, self::AUTHOR, self::EDITOR, self::ADMIN) as $role_name) {
+        foreach (array(self::SUBSCRIBER_ROLE, self::CONTRIBUTOR_ROLE, self::AUTHOR_ROLE, self::EDITOR_ROLE, self::ADMIN_ROLE) as $role_name) {
             $role = get_role($role_name);
             $role->add_cap(self::CREATE_INTERAKTIVS);
             $role->add_cap(self::EDIT_INTERAKTIVS);
@@ -126,7 +145,7 @@ class InteraktivPlugin
 
     function disable_edit_interaktiv_for_all()
     {
-        foreach (array(self::SUBSCRIBER, self::CONTRIBUTOR, self::AUTHOR, self::EDITOR, self::ADMIN) as $role_name) {
+        foreach (array(self::SUBSCRIBER_ROLE, self::CONTRIBUTOR_ROLE, self::AUTHOR_ROLE, self::EDITOR_ROLE, self::ADMIN_ROLE) as $role_name) {
             $role = get_role($role_name);
             $role->remove_cap(self::CREATE_INTERAKTIVS);
             $role->remove_cap(self::EDIT_INTERAKTIVS);
@@ -138,7 +157,7 @@ class InteraktivPlugin
 
     function enable_others_interaktiv_for_editor()
     {
-        foreach (array(self::EDITOR, self::ADMIN) as $role_name) {
+        foreach (array(self::EDITOR_ROLE, self::ADMIN_ROLE) as $role_name) {
             $role = get_role($role_name);
             $role->add_cap(self::EDIT_OTHERS_INTERAKTIVS);
             $role->add_cap(self::DELETE_OTHERS_INTERAKTIVS);
@@ -152,7 +171,7 @@ class InteraktivPlugin
 
     function disable_others_interaktiv_for_editor()
     {
-        foreach (array(self::EDITOR, self::ADMIN) as $role_name) {
+        foreach (array(self::EDITOR_ROLE, self::ADMIN_ROLE) as $role_name) {
             $role = get_role($role_name);
             $role->remove_cap(self::EDIT_OTHERS_INTERAKTIVS);
             $role->remove_cap(self::DELETE_OTHERS_INTERAKTIVS);
@@ -235,7 +254,7 @@ class InteraktivPlugin
             'label' => __('Interaktiv', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             'description' => __('Grünes Brett etc.', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             'labels' => $labels,
-            'supports' => array('author', 'title', 'editor', 'comments', 'post-formats'),
+            'supports' => array(self::AUTHOR, 'title', 'editor', 'comments', 'post-formats'),
             //'taxonomies' => array(),
             'hierarchical' => false,
             'public' => true,
@@ -274,8 +293,7 @@ class InteraktivPlugin
             $post = get_post($args[0]);
             $post_type = get_post_type_object($post->post_type);
             $caps = array();
-        }
-        elseif (self::EDIT_COMMENT == $cap) {
+        } elseif (self::EDIT_COMMENT == $cap) {
             $comment = get_comment($args[0]);
         }
 
@@ -299,10 +317,9 @@ class InteraktivPlugin
                 $caps[] = self::READ;
             else
                 $caps[] = $post_type->cap->read_private_posts;
-        }
-        elseif (self::EDIT_COMMENT == $cap) {
+        } elseif (self::EDIT_COMMENT == $cap) {
             if ($user_id != $comment->user_id)
-			    $caps[] = 'moderate_comments';
+                $caps[] = 'moderate_comments';
         }
         return $caps;
     }
@@ -350,6 +367,44 @@ class InteraktivPlugin
     function interaktiv_default_post_format_filter($format)
     {
         return in_array($format, $this->get_interaktiv_allowed_project_formats()) ? $format : 'status';
+    }
+
+    function interaktiv_columns($columns)
+    {
+        $columns = array(
+            'cb' => '&lt;input type="checkbox" />',
+            'title' => __('Titel', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
+            self::CONTENT => __('Inhalt', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
+            self::AUTHOR => __('Autor', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
+            self::COMMENT_COUNT => __('Kommentare', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
+            'date' => __('Datum', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN)
+        );
+        return $columns;
+    }
+
+    function manage_interaktiv_columns($column, $post_id)
+    {
+        global $post;
+        switch ($column) {
+            case self::CONTENT:
+                $post = get_post($post_id);
+                echo apply_filters('the_content', $post->post_content);
+                break;
+            case self::COMMENT_COUNT:
+                $post = get_post($post_id);
+                echo apply_filters('the_content', $post->comment_count);
+                break;
+            /* Just break out of the switch statement for everything else. */
+            default :
+                break;
+        }
+    }
+
+    function interaktiv_sortable_columns($columns)
+    {
+        $columns[self::AUTHOR] = self::AUTHOR;
+        $columns[self::COMMENT_COUNT] = self::COMMENT_COUNT;
+        return $columns;
     }
 }
 

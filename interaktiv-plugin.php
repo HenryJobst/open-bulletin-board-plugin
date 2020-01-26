@@ -70,6 +70,7 @@ class InteraktivPlugin
     const CREATE_INTERAKTIVS = 'create_interaktivs';
 
     const EDIT_COMMENT = 'edit_comment';
+    const MODERATE_COMMENTS = 'moderate_comments';
 
 
     const ADD_FILTER_PRIORITY = 10;
@@ -82,9 +83,13 @@ class InteraktivPlugin
 
     // columns
     const CONTENT = 'content';
+    const COMMENTS = 'comments';
     const COMMENT_COUNT = 'comment_count';
     const AUTHOR = 'author';
+    const POST_TAG = 'post_tag';
     const ORDERBY = 'orderby';
+    const THE_CONTENT = 'the_content';
+    const PRIVATE = 'private';
 
     function __construct()
     {
@@ -255,7 +260,7 @@ class InteraktivPlugin
             'description' => __('Grünes Brett etc.', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             'labels' => $labels,
             'supports' => array(self::AUTHOR, 'title', 'editor', 'comments', 'post-formats'),
-            //'taxonomies' => array(),
+            'taxonomies' => array(self::POST_TAG),
             'hierarchical' => false,
             'public' => true,
             'show_ui' => true,
@@ -311,7 +316,7 @@ class InteraktivPlugin
                 $caps[] = $post_type->cap->delete_others_posts;
         } /* If reading a entry, assign the required capability. */
         elseif (self::READ_INTERAKTIV == $cap) {
-            if ('private' != $post->post_status)
+            if (self::PRIVATE != $post->post_status)
                 $caps[] = self::READ;
             elseif ($user_id == $post->post_author)
                 $caps[] = self::READ;
@@ -319,7 +324,7 @@ class InteraktivPlugin
                 $caps[] = $post_type->cap->read_private_posts;
         } elseif (self::EDIT_COMMENT == $cap) {
             if ($user_id != $comment->user_id)
-                $caps[] = 'moderate_comments';
+                $caps[] = self::MODERATE_COMMENTS;
         }
         return $caps;
     }
@@ -366,7 +371,7 @@ class InteraktivPlugin
 
     function interaktiv_default_post_format_filter($format)
     {
-        return in_array($format, $this->get_interaktiv_allowed_project_formats()) ? $format : 'status';
+        return in_array($format, $this->get_interaktiv_allowed_project_formats()) ? $format : 'Standard';
     }
 
     function interaktiv_columns($columns)
@@ -376,6 +381,7 @@ class InteraktivPlugin
             'title' => __('Titel', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             self::CONTENT => __('Inhalt', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             self::AUTHOR => __('Autor', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
+            self::POST_TAG => __('Schlagwörter', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             self::COMMENT_COUNT => __('Kommentare', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             'date' => __('Datum', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN)
         );
@@ -388,11 +394,26 @@ class InteraktivPlugin
         switch ($column) {
             case self::CONTENT:
                 $post = get_post($post_id);
-                echo apply_filters('the_content', $post->post_content);
+                echo apply_filters(self::THE_CONTENT, $post->post_content);
                 break;
             case self::COMMENT_COUNT:
                 $post = get_post($post_id);
-                echo apply_filters('the_content', $post->comment_count);
+                echo apply_filters(self::THE_CONTENT, $post->comment_count);
+                break;
+            case  self::POST_TAG:
+                $posttags = get_the_tags($post_id);
+                $content = '';
+                if ($posttags) {
+                    foreach($posttags as $tag) {
+                        if ($content != '') {
+                            $content = $content . ', ' . $tag->name;
+                        }
+                        else {
+                            $content = $tag->name;
+                        }
+                    }
+                }
+                echo apply_filters(self::POST_TAG, $content);
                 break;
             /* Just break out of the switch statement for everything else. */
             default :
@@ -404,6 +425,7 @@ class InteraktivPlugin
     {
         $columns[self::AUTHOR] = self::AUTHOR;
         $columns[self::COMMENT_COUNT] = self::COMMENT_COUNT;
+        $columns[self::POST_TAG] = self::POST_TAG;
         return $columns;
     }
 }

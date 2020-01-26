@@ -405,11 +405,12 @@ class InteraktivPlugin
                 $content = '';
                 if ($posttags) {
                     foreach($posttags as $tag) {
+                        $tag_link = '<a href="edit.php?tag=' . $tag->slug . '">' . $tag->name . '</a>';
                         if ($content != '') {
-                            $content = $content . ', ' . $tag->name;
+                            $content = $content . ', ' . $tag_link;
                         }
                         else {
-                            $content = $tag->name;
+                            $content = $tag_link;
                         }
                     }
                 }

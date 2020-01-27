@@ -90,6 +90,9 @@ class InteraktivPlugin
     const ORDERBY = 'orderby';
     const THE_CONTENT = 'the_content';
     const PRIVATE = 'private';
+    const MYTITLE = 'mytitle';
+    const DATE = 'date';
+    const CB = 'cb';
 
     function __construct()
     {
@@ -259,7 +262,7 @@ class InteraktivPlugin
             'label' => __('Interaktiv', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             'description' => __('Grünes Brett etc.', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             'labels' => $labels,
-            'supports' => array(self::AUTHOR, 'title', 'editor', 'comments', 'post-formats'),
+            'supports' => array(self::AUTHOR, self::MYTITLE, 'editor', 'comments', 'post-formats'),
             'taxonomies' => array(self::POST_TAG),
             'hierarchical' => false,
             'public' => true,
@@ -377,13 +380,13 @@ class InteraktivPlugin
     function interaktiv_columns($columns)
     {
         $columns = array(
-            'cb' => '&lt;input type="checkbox" />',
-            'title' => __('Titel', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
+            self::CB => '&lt;input type="checkbox" />',
+            self::MYTITLE => __('Titel', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             self::CONTENT => __('Inhalt', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             self::AUTHOR => __('Autor', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             self::POST_TAG => __('Schlagwörter', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             self::COMMENT_COUNT => __('Kommentare', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'date' => __('Datum', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN)
+            self::DATE => __('Datum', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN)
         );
         return $columns;
     }
@@ -391,25 +394,58 @@ class InteraktivPlugin
     function manage_interaktiv_columns($column, $post_id)
     {
         global $post;
+        $post = get_post($post_id);
+        setup_postdata($post);
+
         switch ($column) {
+            case self::MYTITLE:
+                $this_title = _draft_or_post_title();
+                $post_title = wp_kses($post->post_title, wp_kses_allowed_html('post'));
+                $post_title_cleaned = wp_kses($post_title, wp_kses_allowed_html('strip'));
+                $post_type_object = get_post_type_object($post->post_type);
+                $can_edit_post = current_user_can($post_type_object->cap->edit_post, $post->ID);
+
+                $sub_menu = '';
+                if ($can_edit_post && 'trash' != $post->post_status) {
+                    $sub_menu .= '<a href="' . get_edit_post_link($post->ID, true) . '" title="' . esc_attr(__('Edit this item')) . '">' . __('Bearbeiten') . '</a>';
+                    $sub_menu .= '<a href="#" class="editinline" title="' . esc_attr(__('Edit this item inline')) . '">' . __('Quick&nbsp;Edit') . '</a>';
+                }
+                if (current_user_can($post_type_object->cap->delete_post, $post->ID)) {
+                    if ('trash' == $post->post_status)
+                        $sub_menu .= "<a title='" . esc_attr(__('Restore this item from the Trash')) . "' href='" . wp_nonce_url(admin_url(sprintf($post_type_object->_edit_link . '&amp;action=untrash', $post->ID)), 'untrash-' . $post->post_type . '_' . $post->ID) . "'>" . __('Restore') . "</a>";
+                    elseif (EMPTY_TRASH_DAYS)
+                        $sub_menu .= "<a class='submitdelete' title='" . esc_attr(__('Move this item to the Trash')) . "' href='" . get_delete_post_link($post->ID) . "'>" . __('Papierkorb') . "</a>";
+                    if ('trash' == $post->post_status || !EMPTY_TRASH_DAYS)
+                        $sub_menu .= "<a class='submitdelete' title='" . esc_attr(__('Delete this item permanently')) . "' href='" . get_delete_post_link($post->ID, '', true) . "'>" . __('Delete Permanently') . "</a>";
+                }
+                if ($post_type_object->public) {
+                    if (in_array($post->post_status, array('pending', 'draft', 'future'))) {
+                        if ($can_edit_post)
+                            $sub_menu .= '<a href="' . esc_url(add_query_arg('preview', 'true', get_permalink($post->ID))) . '" title="' . esc_attr(sprintf(__('Preview &#8220;%s&#8221;'), $post_title_cleaned)) . '" rel="permalink">' . __('Vorschau') . '</a>';
+                    } elseif ('trash' != $post->post_status) {
+                        $sub_menu .= '<a href="' . get_permalink($post->ID) . '" title="' . esc_attr(sprintf(__('View &#8220;%s&#8221;'), $post_title_cleaned)) . '" rel="permalink">' . __('Ansicht') . '</a>';
+                    }
+                }
+                echo '<a class="row-title" href=">' . get_edit_post_link($post->ID, true) . '" title="' . esc_attr(__('Bearbeiten')) . '">' . $post_title . '</a>';
+                if ($sub_menu != '') {
+                    echo '<p>' . $sub_menu . '</p>';
+                }
+                break;
             case self::CONTENT:
-                $post = get_post($post_id);
                 echo apply_filters(self::THE_CONTENT, $post->post_content);
                 break;
             case self::COMMENT_COUNT:
-                $post = get_post($post_id);
                 echo apply_filters(self::THE_CONTENT, $post->comment_count);
                 break;
             case  self::POST_TAG:
                 $posttags = get_the_tags($post_id);
                 $content = '';
                 if ($posttags) {
-                    foreach($posttags as $tag) {
+                    foreach ($posttags as $tag) {
                         $tag_link = '<a href="edit.php?tag=' . $tag->slug . '">' . $tag->name . '</a>';
                         if ($content != '') {
                             $content = $content . ', ' . $tag_link;
-                        }
-                        else {
+                        } else {
                             $content = $tag_link;
                         }
                     }
@@ -424,6 +460,7 @@ class InteraktivPlugin
 
     function interaktiv_sortable_columns($columns)
     {
+        #$columns[self::MYTITLE] = self::MYTITLE;
         $columns[self::AUTHOR] = self::AUTHOR;
         $columns[self::COMMENT_COUNT] = self::COMMENT_COUNT;
         $columns[self::POST_TAG] = self::POST_TAG;

@@ -73,9 +73,9 @@ class InteraktivPlugin
     const MODERATE_COMMENTS = 'moderate_comments';
 
 
-    const ADD_FILTER_PRIORITY = 10;
-    const ADD_FILTER_PARAMETER_COUNT2 = 2;
-    const ADD_FILTER_PARAMETER_COUNT4 = 4;
+    const ADD_PRIORITY = 10;
+    const ADD_PARAMETER_COUNT2 = 2;
+    const ADD_PARAMETER_COUNT4 = 4;
 
     const POST_FORMATS = 'post-formats';
     const POST_TYPE = 'post_type';
@@ -87,12 +87,15 @@ class InteraktivPlugin
     const COMMENT_COUNT = 'comment_count';
     const AUTHOR = 'author';
     const POST_TAG = 'post_tag';
-    const ORDERBY = 'orderby';
+    const ORDER_BY = 'orderby';
     const THE_CONTENT = 'the_content';
     const PRIVATE = 'private';
-    const MYTITLE = 'mytitle';
     const DATE = 'date';
     const CB = 'cb';
+    const NAME = 'name';
+    const URL = 'url';
+    const EMAIL = 'email';
+    const NAME_META_BOX_NONCE = self::INTERAKTIV . '_' . self::POST_TYPE . '_' . self::NAME . '_meta_box_nonce';
 
     function __construct()
     {
@@ -101,7 +104,7 @@ class InteraktivPlugin
 
         // set special mapping function for per post capabilities
         add_filter('map_meta_cap', array($this, 'interaktiv_map_meta_cap'),
-            self::ADD_FILTER_PRIORITY, self::ADD_FILTER_PARAMETER_COUNT4);
+            self::ADD_PRIORITY, self::ADD_PARAMETER_COUNT4);
 
         // add custom post type to standard post loop
         add_action('pre_get_posts', array($this, 'add_interaktiv_to_post_type'));
@@ -119,11 +122,17 @@ class InteraktivPlugin
 
         // Set custom columns for custom post type
         add_action('manage_interaktiv_posts_custom_column', array($this, 'manage_interaktiv_columns'),
-            self::ADD_FILTER_PRIORITY, self::ADD_FILTER_PARAMETER_COUNT2);
+            self::ADD_PRIORITY, self::ADD_PARAMETER_COUNT2);
 
         // Set custom sortable columns for custom post type
         add_filter('manage_edit-interaktiv_sortable_columns', array($this, 'interaktiv_sortable_columns'));
 
+        // Add meta boxes
+        add_action('add_meta_boxes_interaktiv', array($this, 'interaktiv_post_type_add_meta_boxes'));
+
+        // Add save of meta boxes
+        add_action('save_post_interaktiv', array($this, 'interaktiv_post_type_save_name_meta_boxes_data'),
+            self::ADD_PRIORITY, self::ADD_PARAMETER_COUNT2);
     }
 
     function activate()
@@ -233,6 +242,11 @@ class InteraktivPlugin
             'items_list' => __('Eintragsliste', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             'items_list_navigation' => __('Eintragsliste Navigation', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             'filter_items_list' => __('Filtere Eintragsliste', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
+            'item_published' => __('Eintrag veröffentlicht.', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
+            'item_published_privately' => __('Eintrag privat veröffentlicht', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
+            'item_reverted_to_draft' => __('Eintrag zum Entwurf zurückgestuft.', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
+            'item_scheduled' => __('Eintrag eingeplant.', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
+            'item_updated' => __('Eintrag aktualisiert', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
         );
 
         $capabilities = array(
@@ -262,12 +276,13 @@ class InteraktivPlugin
             'label' => __('Interaktiv', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             'description' => __('Grünes Brett etc.', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             'labels' => $labels,
-            'supports' => array(self::AUTHOR, self::MYTITLE, 'editor', 'comments', 'post-formats'),
+            'supports' => array(self::AUTHOR, self::TITLE, 'editor', 'comments', 'post-formats', 'custom-fields'),
             'taxonomies' => array(self::POST_TAG),
             'hierarchical' => false,
             'public' => true,
             'show_ui' => true,
             'show_in_menu' => true,
+            'menu_icon' => 'dashicons-megaphone',
             'menu_position' => 3,
             'show_in_admin_bar' => true,
             'show_in_nav_menus' => true,
@@ -285,6 +300,87 @@ class InteraktivPlugin
 
         flush_rewrite_rules();
 
+    }
+
+    function add_custom_interaktiv_meta_box($meta_box_id, $meta_box_title)
+    {
+        $plugin_prefix = self::INTERAKTIV . '_post_type_';
+
+        $html_id_attribute = $plugin_prefix . $meta_box_id . '_meta_box';
+        $php_callback_function = $plugin_prefix . 'build_' . $meta_box_id . '_meta_box';
+        $show_me_on_post_type = self::INTERAKTIV;
+        $box_placement = 'side';
+        $box_priority = 'low';
+
+        add_meta_box(
+            $html_id_attribute,
+            $meta_box_title,
+            $php_callback_function,
+            $show_me_on_post_type,
+            $box_placement,
+            $box_priority
+        );
+    }
+
+    function interaktiv_post_type_add_meta_boxes($post)
+    {
+        $this->add_custom_interaktiv_meta_box(self::NAME, __('Name', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN));
+        $this->add_custom_interaktiv_meta_box(self::URL, __('Homepage', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN));
+        $this->add_custom_interaktiv_meta_box(self::EMAIL, __('E-Mail', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN));
+    }
+
+    function interaktiv_post_type_build_name_meta_box($post)
+    {
+        wp_nonce_field(basename(__FILE__), self::NAME_META_BOX_NONCE);
+
+        $current_value = get_post_meta($post->ID, self::NAME, true);
+        ?>
+        <div class="inside">
+            <section id="name-meta-box-container">
+                <p>
+                    <input type="text" name="name" id="name"<?php echo ' value="' . $current_value . '"'; ?>>
+                </p>
+            </section>
+        </div>
+        <?php
+    }
+
+    function interaktiv_post_type_save_name_meta_boxes_data($post_id)
+    {
+        if (!isset($_POST[self::NAME_META_BOX_NONCE]) ||
+            !wp_verify_nonce($_POST[self::NAME_META_BOX_NONCE], basename(__FILE__))) {
+            return;
+        }
+
+        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
+            return;
+
+        if (defined('DOING_AJAX') && DOING_AJAX)
+            return;
+
+        if (!current_user_can('edit_post', $post_id))
+            return;
+
+        if (isset($_REQUEST[self::NAME])) {
+            update_post_meta(
+                $post_id,
+                self::NAME,
+                sanitize_text_field($_POST[self::NAME])
+            );
+        }
+    }
+
+    function the_name($post = 0, $echo = true)
+    {
+        $post = get_post($post);
+
+        $id = isset($post->ID) ? $post->ID : 0;
+        $value = get_post_meta($id, self::NAME, true);
+
+        if ($echo) {
+            echo sprintf('<span class="interaktiv-detail--name">%s</span>', esc_html($value));
+        } else
+            return $value;
     }
 
     function add_interaktiv_to_post_type($query)
@@ -381,8 +477,11 @@ class InteraktivPlugin
     {
         $columns = array(
             self::CB => '&lt;input type="checkbox" />',
-            self::MYTITLE => __('Titel', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
+            self::TITLE => __('Titel', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             self::CONTENT => __('Inhalt', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
+            self::NAME => __('Name', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
+            self::URL => __('Homepage', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
+            self::EMAIL => __('E-Mail', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             self::AUTHOR => __('Autor', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             self::POST_TAG => __('Schlagwörter', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             self::COMMENT_COUNT => __('Kommentare', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
@@ -398,50 +497,17 @@ class InteraktivPlugin
         setup_postdata($post);
 
         switch ($column) {
-            case self::MYTITLE:
-                $this_title = _draft_or_post_title();
-                $post_title = wp_kses($post->post_title, wp_kses_allowed_html('post'));
-                $post_title_cleaned = wp_kses($post_title, wp_kses_allowed_html('strip'));
-                $post_type_object = get_post_type_object($post->post_type);
-                $can_edit_post = current_user_can($post_type_object->cap->edit_post, $post->ID);
-
-                $sub_menu = '';
-                if ($can_edit_post && 'trash' != $post->post_status) {
-                    $sub_menu .= '<a href="' . get_edit_post_link($post->ID, true) . '" title="' . esc_attr(__('Edit this item')) . '">' . __('Bearbeiten') . '</a>';
-                    $sub_menu .= '<a href="#" class="editinline" title="' . esc_attr(__('Edit this item inline')) . '">' . __('Quick&nbsp;Edit') . '</a>';
-                }
-                if (current_user_can($post_type_object->cap->delete_post, $post->ID)) {
-                    if ('trash' == $post->post_status)
-                        $sub_menu .= "<a title='" . esc_attr(__('Restore this item from the Trash')) . "' href='" . wp_nonce_url(admin_url(sprintf($post_type_object->_edit_link . '&amp;action=untrash', $post->ID)), 'untrash-' . $post->post_type . '_' . $post->ID) . "'>" . __('Restore') . "</a>";
-                    elseif (EMPTY_TRASH_DAYS)
-                        $sub_menu .= "<a class='submitdelete' title='" . esc_attr(__('Move this item to the Trash')) . "' href='" . get_delete_post_link($post->ID) . "'>" . __('Papierkorb') . "</a>";
-                    if ('trash' == $post->post_status || !EMPTY_TRASH_DAYS)
-                        $sub_menu .= "<a class='submitdelete' title='" . esc_attr(__('Delete this item permanently')) . "' href='" . get_delete_post_link($post->ID, '', true) . "'>" . __('Delete Permanently') . "</a>";
-                }
-                if ($post_type_object->public) {
-                    if (in_array($post->post_status, array('pending', 'draft', 'future'))) {
-                        if ($can_edit_post)
-                            $sub_menu .= '<a href="' . esc_url(add_query_arg('preview', 'true', get_permalink($post->ID))) . '" title="' . esc_attr(sprintf(__('Preview &#8220;%s&#8221;'), $post_title_cleaned)) . '" rel="permalink">' . __('Vorschau') . '</a>';
-                    } elseif ('trash' != $post->post_status) {
-                        $sub_menu .= '<a href="' . get_permalink($post->ID) . '" title="' . esc_attr(sprintf(__('View &#8220;%s&#8221;'), $post_title_cleaned)) . '" rel="permalink">' . __('Ansicht') . '</a>';
-                    }
-                }
-                echo '<a class="row-title" href=">' . get_edit_post_link($post->ID, true) . '" title="' . esc_attr(__('Bearbeiten')) . '">' . $post_title . '</a>';
-                if ($sub_menu != '') {
-                    echo '<p>' . $sub_menu . '</p>';
-                }
-                break;
             case self::CONTENT:
                 echo apply_filters(self::THE_CONTENT, $post->post_content);
                 break;
             case self::COMMENT_COUNT:
-                echo apply_filters(self::THE_CONTENT, $post->comment_count);
+                echo apply_filters(self::COMMENT_COUNT, $post->comment_count);
                 break;
             case  self::POST_TAG:
-                $posttags = get_the_tags($post_id);
+                $post_tags = get_the_tags($post_id);
                 $content = '';
-                if ($posttags) {
-                    foreach ($posttags as $tag) {
+                if ($post_tags) {
+                    foreach ($post_tags as $tag) {
                         $tag_link = '<a href="edit.php?tag=' . $tag->slug . '">' . $tag->name . '</a>';
                         if ($content != '') {
                             $content = $content . ', ' . $tag_link;
@@ -460,13 +526,18 @@ class InteraktivPlugin
 
     function interaktiv_sortable_columns($columns)
     {
-        #$columns[self::MYTITLE] = self::MYTITLE;
+        $columns[self::TITLE] = self::TITLE;
         $columns[self::AUTHOR] = self::AUTHOR;
+        $columns[self::NAME] = self::NAME;
+        $columns[self::URL] = self::URL;
+        $columns[self::EMAIL] = self::EMAIL;
         $columns[self::COMMENT_COUNT] = self::COMMENT_COUNT;
         $columns[self::POST_TAG] = self::POST_TAG;
         return $columns;
     }
 }
+
+https://codex.wordpress.org/I18n_for_WordPress_Developers
 
 $plugin = new InteraktivPlugin();
 

@@ -95,7 +95,17 @@ class InteraktivPlugin
     const NAME = 'name';
     const URL = 'url';
     const EMAIL = 'email';
-    const NAME_META_BOX_NONCE = self::INTERAKTIV . '_' . self::POST_TYPE . '_' . self::NAME . '_meta_box_nonce';
+    const TITLE = 'title';
+    const LOCATION = 'location';
+
+    const META_BOX = '_meta_box';
+    const META_BOX_NONCE = self::META_BOX . '_nonce';
+    const PLUGIN_PREFIX = self::INTERAKTIV . '_' . self::POST_TYPE . '_';
+
+    const NAME_META_BOX_NONCE = self::PLUGIN_PREFIX . self::NAME . self::META_BOX_NONCE;
+    const URL_META_BOX_NONCE = self::PLUGIN_PREFIX . self::URL . self::META_BOX_NONCE;
+    const EMAIL_META_BOX_NONCE = self::PLUGIN_PREFIX . self::EMAIL . self::META_BOX_NONCE;
+    const LOCATION_META_BOX_NONCE = self::PLUGIN_PREFIX . self::LOCATION . self::META_BOX_NONCE;
 
     function __construct()
     {
@@ -132,6 +142,12 @@ class InteraktivPlugin
 
         // Add save of meta boxes
         add_action('save_post_interaktiv', array($this, 'interaktiv_post_type_save_name_meta_boxes_data'),
+            self::ADD_PRIORITY, self::ADD_PARAMETER_COUNT2);
+        add_action('save_post_interaktiv', array($this, 'interaktiv_post_type_save_url_meta_boxes_data'),
+            self::ADD_PRIORITY, self::ADD_PARAMETER_COUNT2);
+        add_action('save_post_interaktiv', array($this, 'interaktiv_post_type_save_email_meta_boxes_data'),
+            self::ADD_PRIORITY, self::ADD_PARAMETER_COUNT2);
+        add_action('save_post_interaktiv', array($this, 'interaktiv_post_type_save_location_meta_boxes_data'),
             self::ADD_PRIORITY, self::ADD_PARAMETER_COUNT2);
     }
 
@@ -276,7 +292,7 @@ class InteraktivPlugin
             'label' => __('Interaktiv', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             'description' => __('Grünes Brett etc.', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             'labels' => $labels,
-            'supports' => array(self::AUTHOR, self::TITLE, 'editor', 'comments', 'post-formats', 'custom-fields'),
+            'supports' => array(self::AUTHOR, self::TITLE, 'editor', 'comments', 'post-formats'),
             'taxonomies' => array(self::POST_TAG),
             'hierarchical' => false,
             'public' => true,
@@ -304,10 +320,8 @@ class InteraktivPlugin
 
     function add_custom_interaktiv_meta_box($meta_box_id, $meta_box_title)
     {
-        $plugin_prefix = self::INTERAKTIV . '_post_type_';
-
-        $html_id_attribute = $plugin_prefix . $meta_box_id . '_meta_box';
-        $php_callback_function = $plugin_prefix . 'build_' . $meta_box_id . '_meta_box';
+        $html_id_attribute = self::PLUGIN_PREFIX . $meta_box_id . self::META_BOX;
+        $php_callback_function = array($this, self::PLUGIN_PREFIX . 'build_' . $meta_box_id . self::META_BOX);
         $show_me_on_post_type = self::INTERAKTIV;
         $box_placement = 'side';
         $box_priority = 'low';
@@ -327,28 +341,52 @@ class InteraktivPlugin
         $this->add_custom_interaktiv_meta_box(self::NAME, __('Name', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN));
         $this->add_custom_interaktiv_meta_box(self::URL, __('Homepage', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN));
         $this->add_custom_interaktiv_meta_box(self::EMAIL, __('E-Mail', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN));
+        $this->add_custom_interaktiv_meta_box(self::LOCATION, __('Ort', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN));
     }
 
-    function interaktiv_post_type_build_name_meta_box($post)
+    function interaktiv_post_type_build_meta_box($post, $column)
     {
-        wp_nonce_field(basename(__FILE__), self::NAME_META_BOX_NONCE);
+        $column_nonce = self::PLUGIN_PREFIX . $column . self::META_BOX_NONCE;
+        wp_nonce_field(basename(__FILE__), $column_nonce);
 
-        $current_value = get_post_meta($post->ID, self::NAME, true);
+        $current_value = get_post_meta($post->ID, $column, true);
         ?>
         <div class="inside">
-            <section id="name-meta-box-container">
+            <section id="<? echo $column."-meta-box-container"; ?>">
                 <p>
-                    <input type="text" name="name" id="name"<?php echo ' value="' . $current_value . '"'; ?>>
+                    <input type="text" name=<? echo $column.' id="'.$column.'" value="'.$current_value.'"'; ?>>
                 </p>
             </section>
         </div>
         <?php
     }
 
-    function interaktiv_post_type_save_name_meta_boxes_data($post_id)
+    function interaktiv_post_type_build_name_meta_box($post)
     {
-        if (!isset($_POST[self::NAME_META_BOX_NONCE]) ||
-            !wp_verify_nonce($_POST[self::NAME_META_BOX_NONCE], basename(__FILE__))) {
+        $this->interaktiv_post_type_build_meta_box($post, self::NAME);
+    }
+
+    function interaktiv_post_type_build_url_meta_box($post)
+    {
+        $this->interaktiv_post_type_build_meta_box($post, self::URL);
+    }
+
+    function interaktiv_post_type_build_email_meta_box($post)
+    {
+        $this->interaktiv_post_type_build_meta_box($post, self::EMAIL);
+    }
+
+    function interaktiv_post_type_build_location_meta_box($post)
+    {
+        $this->interaktiv_post_type_build_meta_box($post, self::LOCATION);
+    }
+
+    function interaktiv_post_type_save_meta_boxes_data($post_id, $column)
+    {
+        $column_nonce = self::PLUGIN_PREFIX . $column . self::META_BOX_NONCE;
+
+        if (!isset($_POST[$column_nonce]) ||
+            !wp_verify_nonce($_POST[$column_nonce], basename(__FILE__))) {
             return;
         }
 
@@ -361,26 +399,47 @@ class InteraktivPlugin
         if (!current_user_can('edit_post', $post_id))
             return;
 
-        if (isset($_REQUEST[self::NAME])) {
-            update_post_meta(
-                $post_id,
-                self::NAME,
-                sanitize_text_field($_POST[self::NAME])
-            );
+        if (isset($_REQUEST[$column])) {
+            update_post_meta($post_id, $column, sanitize_text_field($_POST[$column]));
         }
     }
 
-    function the_name($post = 0, $echo = true)
+    function interaktiv_post_type_save_name_meta_boxes_data($post_id)
+    {
+        $this->interaktiv_post_type_save_meta_boxes_data($post_id, self::NAME);
+    }
+
+    function interaktiv_post_type_save_url_meta_boxes_data($post_id)
+    {
+        $this->interaktiv_post_type_save_meta_boxes_data($post_id, self::URL);
+    }
+
+    function interaktiv_post_type_save_email_meta_boxes_data($post_id)
+    {
+        $this->interaktiv_post_type_save_meta_boxes_data($post_id, self::EMAIL);
+    }
+
+    function interaktiv_post_type_save_location_meta_boxes_data($post_id)
+    {
+        $this->interaktiv_post_type_save_meta_boxes_data($post_id, self::LOCATION);
+    }
+
+    function the_column($post = 0, $echo = true, $column)
     {
         $post = get_post($post);
 
         $id = isset($post->ID) ? $post->ID : 0;
-        $value = get_post_meta($id, self::NAME, true);
+        $value = get_post_meta($id, $column, true);
 
         if ($echo) {
-            echo sprintf('<span class="interaktiv-detail--name">%s</span>', esc_html($value));
+            echo sprintf('<span class="interaktiv-detail--%s">%s</span>', $column, esc_html($value));
         } else
             return $value;
+    }
+
+    function the_name($post = 0, $echo = true)
+    {
+        return $this->the_column($post, $echo, self::NAME);
     }
 
     function add_interaktiv_to_post_type($query)
@@ -485,6 +544,7 @@ class InteraktivPlugin
             self::AUTHOR => __('Autor', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             self::POST_TAG => __('Schlagwörter', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             self::COMMENT_COUNT => __('Kommentare', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
+            self::LOCATION => __('Ort', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             self::DATE => __('Datum', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN)
         );
         return $columns;
@@ -518,6 +578,18 @@ class InteraktivPlugin
                 }
                 echo apply_filters(self::POST_TAG, $content);
                 break;
+            case self::NAME:
+                echo apply_filters(self::NAME, get_post_meta($post_id, self::NAME, true));
+                break;
+            case self::URL:
+                echo apply_filters(self::URL, get_post_meta($post_id, self::URL, true));
+                break;
+            case self::EMAIL:
+                echo apply_filters(self::EMAIL, get_post_meta($post_id, self::EMAIL, true));
+                break;
+            case self::LOCATION:
+                echo apply_filters(self::LOCATION, get_post_meta($post_id, self::LOCATION, true));
+                break;
             /* Just break out of the switch statement for everything else. */
             default :
                 break;
@@ -528,16 +600,17 @@ class InteraktivPlugin
     {
         $columns[self::TITLE] = self::TITLE;
         $columns[self::AUTHOR] = self::AUTHOR;
+        $columns[self::CONTENT] = self::CONTENT;
         $columns[self::NAME] = self::NAME;
         $columns[self::URL] = self::URL;
         $columns[self::EMAIL] = self::EMAIL;
         $columns[self::COMMENT_COUNT] = self::COMMENT_COUNT;
         $columns[self::POST_TAG] = self::POST_TAG;
+        $columns[self::LOCATION] = self::LOCATION;
+        $columns[self::DATE] = self::DATE;
         return $columns;
     }
 }
-
-https://codex.wordpress.org/I18n_for_WordPress_Developers
 
 $plugin = new InteraktivPlugin();
 

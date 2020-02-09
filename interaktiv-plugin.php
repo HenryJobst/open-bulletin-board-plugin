@@ -33,6 +33,20 @@ SOFTWARE.
 
 defined('ABSPATH') or die;
 
+function the_column($post_id = 0, $echo = true, $column = 'name')
+{
+    $post = get_post($post_id);
+
+    $id = isset($post->ID) ? $post->ID : 0;
+    $value = get_post_meta($id, $column, true);
+
+    if ($echo) {
+        echo sprintf('<span class="interaktiv-detail--%s">%s</span>', $column, esc_html($value));
+        return $value;
+    } else
+        return $value;
+}
+
 class InteraktivPlugin
 {
     // post type name
@@ -97,6 +111,7 @@ class InteraktivPlugin
     const EMAIL = 'email';
     const TITLE = 'title';
     const LOCATION = 'location';
+    const PHONE = 'phone';
 
     const META_BOX = '_meta_box';
     const META_BOX_NONCE = self::META_BOX . '_nonce';
@@ -104,6 +119,7 @@ class InteraktivPlugin
 
     const NAME_META_BOX_NONCE = self::PLUGIN_PREFIX . self::NAME . self::META_BOX_NONCE;
     const URL_META_BOX_NONCE = self::PLUGIN_PREFIX . self::URL . self::META_BOX_NONCE;
+    const PHONE_META_BOX_NONCE = self::PLUGIN_PREFIX . self::PHONE . self::META_BOX_NONCE;
     const EMAIL_META_BOX_NONCE = self::PLUGIN_PREFIX . self::EMAIL . self::META_BOX_NONCE;
     const LOCATION_META_BOX_NONCE = self::PLUGIN_PREFIX . self::LOCATION . self::META_BOX_NONCE;
 
@@ -145,10 +161,15 @@ class InteraktivPlugin
             self::ADD_PRIORITY, self::ADD_PARAMETER_COUNT2);
         add_action('save_post_interaktiv', array($this, 'interaktiv_post_type_save_url_meta_boxes_data'),
             self::ADD_PRIORITY, self::ADD_PARAMETER_COUNT2);
+        add_action('save_post_interaktiv', array($this, 'interaktiv_post_type_save_phone_meta_boxes_data'),
+            self::ADD_PRIORITY, self::ADD_PARAMETER_COUNT2);
         add_action('save_post_interaktiv', array($this, 'interaktiv_post_type_save_email_meta_boxes_data'),
             self::ADD_PRIORITY, self::ADD_PARAMETER_COUNT2);
         add_action('save_post_interaktiv', array($this, 'interaktiv_post_type_save_location_meta_boxes_data'),
             self::ADD_PRIORITY, self::ADD_PARAMETER_COUNT2);
+
+        // activate special single template
+        add_filter('single_template', array($this, 'interaktiv_post_type_single_theme_file_include'));
     }
 
     function activate()
@@ -340,6 +361,7 @@ class InteraktivPlugin
     {
         $this->add_custom_interaktiv_meta_box(self::NAME, __('Name', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN));
         $this->add_custom_interaktiv_meta_box(self::URL, __('Homepage', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN));
+        $this->add_custom_interaktiv_meta_box(self::PHONE, __('Telefon', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN));
         $this->add_custom_interaktiv_meta_box(self::EMAIL, __('E-Mail', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN));
         $this->add_custom_interaktiv_meta_box(self::LOCATION, __('Ort', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN));
     }
@@ -354,7 +376,9 @@ class InteraktivPlugin
         <div class="inside">
             <section id="<? echo $column."-meta-box-container"; ?>">
                 <p>
-                    <input type="text" name=<? echo $column.' id="'.$column.'" value="'.$current_value.'"'; ?>>
+                    <label>
+                        <input type="text" name=<? echo $column.' id="'.$column.'" value="'.$current_value.'"'; ?>>
+                    </label>
                 </p>
             </section>
         </div>
@@ -369,6 +393,11 @@ class InteraktivPlugin
     function interaktiv_post_type_build_url_meta_box($post)
     {
         $this->interaktiv_post_type_build_meta_box($post, self::URL);
+    }
+
+    function interaktiv_post_type_build_phone_meta_box($post)
+    {
+        $this->interaktiv_post_type_build_meta_box($post, self::PHONE);
     }
 
     function interaktiv_post_type_build_email_meta_box($post)
@@ -414,6 +443,11 @@ class InteraktivPlugin
         $this->interaktiv_post_type_save_meta_boxes_data($post_id, self::URL);
     }
 
+    function interaktiv_post_type_save_phone_meta_boxes_data($post_id)
+    {
+        $this->interaktiv_post_type_save_meta_boxes_data($post_id, self::PHONE);
+    }
+
     function interaktiv_post_type_save_email_meta_boxes_data($post_id)
     {
         $this->interaktiv_post_type_save_meta_boxes_data($post_id, self::EMAIL);
@@ -424,22 +458,9 @@ class InteraktivPlugin
         $this->interaktiv_post_type_save_meta_boxes_data($post_id, self::LOCATION);
     }
 
-    function the_column($post = 0, $echo = true, $column)
-    {
-        $post = get_post($post);
-
-        $id = isset($post->ID) ? $post->ID : 0;
-        $value = get_post_meta($id, $column, true);
-
-        if ($echo) {
-            echo sprintf('<span class="interaktiv-detail--%s">%s</span>', $column, esc_html($value));
-        } else
-            return $value;
-    }
-
     function the_name($post = 0, $echo = true)
     {
-        return $this->the_column($post, $echo, self::NAME);
+        return the_column($post, $echo, self::NAME);
     }
 
     function add_interaktiv_to_post_type($query)
@@ -540,6 +561,7 @@ class InteraktivPlugin
             self::CONTENT => __('Inhalt', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             self::NAME => __('Name', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             self::URL => __('Homepage', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
+            self::PHONE => __('Telefon', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             self::EMAIL => __('E-Mail', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             self::AUTHOR => __('Autor', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
             self::POST_TAG => __('Schlagwörter', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
@@ -579,10 +601,14 @@ class InteraktivPlugin
                 echo apply_filters(self::POST_TAG, $content);
                 break;
             case self::NAME:
-                echo apply_filters(self::NAME, get_post_meta($post_id, self::NAME, true));
+                $name = get_post_meta($post_id, self::NAME, true);
+                echo apply_filters(self::NAME, $name);
                 break;
             case self::URL:
                 echo apply_filters(self::URL, get_post_meta($post_id, self::URL, true));
+                break;
+            case self::PHONE:
+                echo apply_filters(self::PHONE, get_post_meta($post_id, self::PHONE, true));
                 break;
             case self::EMAIL:
                 echo apply_filters(self::EMAIL, get_post_meta($post_id, self::EMAIL, true));
@@ -603,12 +629,27 @@ class InteraktivPlugin
         $columns[self::CONTENT] = self::CONTENT;
         $columns[self::NAME] = self::NAME;
         $columns[self::URL] = self::URL;
+        $columns[self::PHONE] = self::PHONE;
         $columns[self::EMAIL] = self::EMAIL;
         $columns[self::COMMENT_COUNT] = self::COMMENT_COUNT;
         $columns[self::POST_TAG] = self::POST_TAG;
         $columns[self::LOCATION] = self::LOCATION;
         $columns[self::DATE] = self::DATE;
         return $columns;
+    }
+
+    function interaktiv_post_type_single_theme_file_include($template)
+    {
+        global $wp;
+
+        if ($wp->query_vars["post_type"] != self::INTERAKTIV)
+            return $template;
+
+        $file = dirname(__FILE__) . '/interaktiv-single.php';
+        if (file_exists($file)) {
+            $template = $file;
+        }
+        return $template;
     }
 }
 

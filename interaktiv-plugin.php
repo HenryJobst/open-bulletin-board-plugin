@@ -4,7 +4,7 @@
 Plugin Name: Interaktiv Plugin
 Plugin URI: https://github.com/HenryJobst/interaktiv-plugin
 Description: This plugin add a new custom post type "Interaktiv", which is editable for all registered users.
-Version: 1.0.3
+Version: 1.0.4
 Author: Henry Jobst
 Author URI: https://github.com/HenryJobst
 Text Domain: interaktiv-plugin-text-domain
@@ -51,9 +51,6 @@ class InteraktivPlugin
 {
     // post type name
     const INTERAKTIV = 'interaktiv';
-
-    // text domain
-    const INTERAKTIV_PLUGIN_TEXT_DOMAIN = 'interaktiv-plugin-text-domain';
 
     // roles
     const SUBSCRIBER_ROLE = 'subscriber';
@@ -168,8 +165,6 @@ class InteraktivPlugin
         add_action('save_post_interaktiv', array($this, 'interaktiv_post_type_save_location_meta_boxes_data'),
             self::ADD_PRIORITY, self::ADD_PARAMETER_COUNT2);
 
-        // activate special single template
-        add_filter('single_template', array($this, 'interaktiv_post_type_single_theme_file_include'));
     }
 
     function activate()
@@ -252,38 +247,38 @@ class InteraktivPlugin
     function register_interaktiv()
     {
         $labels = array(
-            'name' => __('Interaktiv', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'singular_name' => __('Interaktiv', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'menu_name' => __('Interaktiv', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'name_admin_bar' => __('Interaktiv', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'archives' => __('Archiv', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'attributes' => __('Attribute', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'parent_item_colon' => __('Eltern Eintrag:', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'all_items' => __('Alle Einträge', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'add_new_item' => __('Neuer Eintrag', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'add_new' => __('Erstellen', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'new_item' => __('Neuer Eintrag', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'edit_item' => __('Bearbeite Eintrag', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'update_item' => __('Aktualisiere Eintrag', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'view_item' => __('Zeige Eintrag', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'view_items' => __('Zeige Einträge', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'search_items' => __('Suche Einträge', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'not_found' => __('Nicht gefunden', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'not_found_in_trash' => __('Nicht im Papierkorb gefunden', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'featured_image' => __('Bild', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'set_featured_image' => __('Setze Bild', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'remove_featured_image' => __('Entferne Bild', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'use_featured_image' => __('Nutze als Bild', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'insert_into_item' => __('Füge dem Eintrag hinzu', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'uploaded_to_this_item' => __('Upload für den Eintrag', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'items_list' => __('Eintragsliste', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'items_list_navigation' => __('Eintragsliste Navigation', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'filter_items_list' => __('Filtere Eintragsliste', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'item_published' => __('Eintrag veröffentlicht.', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'item_published_privately' => __('Eintrag privat veröffentlicht', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'item_reverted_to_draft' => __('Eintrag zum Entwurf zurückgestuft.', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'item_scheduled' => __('Eintrag eingeplant.', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'item_updated' => __('Eintrag aktualisiert', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
+            'name' => __('Interaktiv', 'interaktiv-plugin-text-domain'),
+            'singular_name' => __('Interaktiv', 'interaktiv-plugin-text-domain'),
+            'menu_name' => __('Interaktiv', 'interaktiv-plugin-text-domain'),
+            'name_admin_bar' => __('Interaktiv', 'interaktiv-plugin-text-domain'),
+            'archives' => __('Archiv', 'interaktiv-plugin-text-domain'),
+            'attributes' => __('Attribute', 'interaktiv-plugin-text-domain'),
+            'parent_item_colon' => __('Eltern Eintrag:', 'interaktiv-plugin-text-domain'),
+            'all_items' => __('Alle Einträge', 'interaktiv-plugin-text-domain'),
+            'add_new_item' => __('Neuer Eintrag', 'interaktiv-plugin-text-domain'),
+            'add_new' => __('Erstellen', 'interaktiv-plugin-text-domain'),
+            'new_item' => __('Neuer Eintrag', 'interaktiv-plugin-text-domain'),
+            'edit_item' => __('Bearbeite Eintrag', 'interaktiv-plugin-text-domain'),
+            'update_item' => __('Aktualisiere Eintrag', 'interaktiv-plugin-text-domain'),
+            'view_item' => __('Zeige Eintrag', 'interaktiv-plugin-text-domain'),
+            'view_items' => __('Zeige Einträge', 'interaktiv-plugin-text-domain'),
+            'search_items' => __('Suche Einträge', 'interaktiv-plugin-text-domain'),
+            'not_found' => __('Nicht gefunden', 'interaktiv-plugin-text-domain'),
+            'not_found_in_trash' => __('Nicht im Papierkorb gefunden', 'interaktiv-plugin-text-domain'),
+            'featured_image' => __('Bild', 'interaktiv-plugin-text-domain'),
+            'set_featured_image' => __('Setze Bild', 'interaktiv-plugin-text-domain'),
+            'remove_featured_image' => __('Entferne Bild', 'interaktiv-plugin-text-domain'),
+            'use_featured_image' => __('Nutze als Bild', 'interaktiv-plugin-text-domain'),
+            'insert_into_item' => __('Füge dem Eintrag hinzu', 'interaktiv-plugin-text-domain'),
+            'uploaded_to_this_item' => __('Upload für den Eintrag', 'interaktiv-plugin-text-domain'),
+            'items_list' => __('Eintragsliste', 'interaktiv-plugin-text-domain'),
+            'items_list_navigation' => __('Eintragsliste Navigation', 'interaktiv-plugin-text-domain'),
+            'filter_items_list' => __('Filtere Eintragsliste', 'interaktiv-plugin-text-domain'),
+            'item_published' => __('Eintrag veröffentlicht.', 'interaktiv-plugin-text-domain'),
+            'item_published_privately' => __('Eintrag privat veröffentlicht', 'interaktiv-plugin-text-domain'),
+            'item_reverted_to_draft' => __('Eintrag zum Entwurf zurückgestuft.', 'interaktiv-plugin-text-domain'),
+            'item_scheduled' => __('Eintrag eingeplant.', 'interaktiv-plugin-text-domain'),
+            'item_updated' => __('Eintrag aktualisiert', 'interaktiv-plugin-text-domain'),
         );
 
         $capabilities = array(
@@ -310,8 +305,8 @@ class InteraktivPlugin
         );
 
         $args = array(
-            'label' => __('Interaktiv', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            'description' => __('Grünes Brett etc.', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
+            'label' => __('Interaktiv', 'interaktiv-plugin-text-domain'),
+            'description' => __('Grünes Brett etc.', 'interaktiv-plugin-text-domain'),
             'labels' => $labels,
             'supports' => array(self::AUTHOR, self::TITLE, 'editor', 'comments', 'post-formats'),
             'taxonomies' => array(self::POST_TAG),
@@ -359,11 +354,11 @@ class InteraktivPlugin
 
     function interaktiv_post_type_add_meta_boxes($post)
     {
-        $this->add_custom_interaktiv_meta_box(self::NAME, __('Name', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN));
-        $this->add_custom_interaktiv_meta_box(self::URL, __('Homepage', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN));
-        $this->add_custom_interaktiv_meta_box(self::PHONE, __('Telefon', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN));
-        $this->add_custom_interaktiv_meta_box(self::EMAIL, __('E-Mail', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN));
-        $this->add_custom_interaktiv_meta_box(self::LOCATION, __('Ort', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN));
+        $this->add_custom_interaktiv_meta_box(self::NAME, __('Name', 'interaktiv-plugin-text-domain'));
+        $this->add_custom_interaktiv_meta_box(self::URL, __('Homepage', 'interaktiv-plugin-text-domain'));
+        $this->add_custom_interaktiv_meta_box(self::PHONE, __('Telefon', 'interaktiv-plugin-text-domain'));
+        $this->add_custom_interaktiv_meta_box(self::EMAIL, __('E-Mail', 'interaktiv-plugin-text-domain'));
+        $this->add_custom_interaktiv_meta_box(self::LOCATION, __('Ort', 'interaktiv-plugin-text-domain'));
     }
 
     function interaktiv_post_type_build_meta_box($post, $column)
@@ -374,10 +369,11 @@ class InteraktivPlugin
         $current_value = get_post_meta($post->ID, $column, true);
         ?>
         <div class="inside">
-            <section id="<? echo $column."-meta-box-container"; ?>">
+            <section id="<? echo $column . "-meta-box-container"; ?>">
                 <p>
                     <label>
-                        <input type="text" name=<? echo $column.' id="'.$column.'" value="'.$current_value.'"'; ?>>
+                        <input type="text"
+                               name=<? echo $column . ' id="' . $column . '" value="' . $current_value . '"'; ?>>
                     </label>
                 </p>
             </section>
@@ -557,19 +553,122 @@ class InteraktivPlugin
     {
         $columns = array(
             self::CB => '&lt;input type="checkbox" />',
-            self::TITLE => __('Titel', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            self::CONTENT => __('Inhalt', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            self::NAME => __('Name', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            self::URL => __('Homepage', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            self::PHONE => __('Telefon', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            self::EMAIL => __('E-Mail', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            self::AUTHOR => __('Autor', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            self::POST_TAG => __('Schlagwörter', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            self::COMMENT_COUNT => __('Kommentare', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            self::LOCATION => __('Ort', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN),
-            self::DATE => __('Datum', self::INTERAKTIV_PLUGIN_TEXT_DOMAIN)
+            self::TITLE => __('Titel', 'interaktiv-plugin-text-domain'),
+            self::CONTENT => __('Inhalt', 'interaktiv-plugin-text-domain'),
+            self::NAME => __('Name', 'interaktiv-plugin-text-domain'),
+            self::URL => __('Homepage', 'interaktiv-plugin-text-domain'),
+            self::PHONE => __('Telefon', 'interaktiv-plugin-text-domain'),
+            self::EMAIL => __('E-Mail', 'interaktiv-plugin-text-domain'),
+            self::AUTHOR => __('Autor', 'interaktiv-plugin-text-domain'),
+            self::POST_TAG => __('Schlagwörter', 'interaktiv-plugin-text-domain'),
+            self::COMMENT_COUNT => __('Kommentare', 'interaktiv-plugin-text-domain'),
+            self::LOCATION => __('Ort', 'interaktiv-plugin-text-domain'),
+            self::DATE => __('Datum', 'interaktiv-plugin-text-domain')
         );
         return $columns;
+    }
+
+    /**
+     * truncateHtml can truncate a string up to a number of characters while preserving whole words and HTML tags
+     * from: https://alanwhipple.com/2011/05/25/php-truncate-string-preserving-html-tags-words/
+     *
+     * @param string $text String to truncate.
+     * @param integer $length Length of returned string, including ellipsis.
+     * @param string $ending Ending to be appended to the trimmed string.
+     * @param boolean $exact If false, $text will not be cut mid-word
+     * @param boolean $considerHtml If true, HTML tags would be handled correctly
+     *
+     * @return string Trimmed string.
+     */
+    function truncateHtml($text, $length = 100, $ending = '...', $exact = false, $considerHtml = true)
+    {
+        if ($considerHtml) {
+            // if the plain text is shorter than the maximum length, return the whole text
+            if (strlen(preg_replace('/<.*?>/', '', $text)) <= $length) {
+                return $text;
+            }
+            // splits all html-tags to scanable lines
+            preg_match_all('/(<.+?>)?([^<>]*)/s', $text, $lines, PREG_SET_ORDER);
+            $total_length = strlen($ending);
+            $open_tags = array();
+            $truncate = '';
+            foreach ($lines as $line_matchings) {
+                // if there is any html-tag in this line, handle it and add it (uncounted) to the output
+                if (!empty($line_matchings[1])) {
+                    // if it's an "empty element" with or without xhtml-conform closing slash
+                    if (preg_match('/^<(\s*.+?\/\s*|\s*(img|br|input|hr|area|base|basefont|col|frame|isindex|link|meta|param)(\s.+?)?)>$/is', $line_matchings[1])) {
+                        // do nothing
+                        // if tag is a closing tag
+                    } else if (preg_match('/^<\s*\/([^\s]+?)\s*>$/s', $line_matchings[1], $tag_matchings)) {
+                        // delete tag from $open_tags list
+                        $pos = array_search($tag_matchings[1], $open_tags);
+                        if ($pos !== false) {
+                            unset($open_tags[$pos]);
+                        }
+                        // if tag is an opening tag
+                    } else if (preg_match('/^<\s*([^\s>!]+).*?>$/s', $line_matchings[1], $tag_matchings)) {
+                        // add tag to the beginning of $open_tags list
+                        array_unshift($open_tags, strtolower($tag_matchings[1]));
+                    }
+                    // add html-tag to $truncate'd text
+                    $truncate .= $line_matchings[1];
+                }
+                // calculate the length of the plain text part of the line; handle entities as one character
+                $content_length = strlen(preg_replace('/&amp;[0-9a-z]{2,8};|&amp;#[0-9]{1,7};|[0-9a-f]{1,6};/i', ' ', $line_matchings[2]));
+                if ($total_length + $content_length > $length) {
+                    // the number of characters which are left
+                    $left = $length - $total_length;
+                    $entities_length = 0;
+                    // search for html entities
+                    if (preg_match_all('/&amp;[0-9a-z]{2,8};|&amp;#[0-9]{1,7};|[0-9a-f]{1,6};/i', $line_matchings[2], $entities, PREG_OFFSET_CAPTURE)) {
+                        // calculate the real length of all entities in the legal range
+                        foreach ($entities[0] as $entity) {
+                            if ($entity[1] + 1 - $entities_length <= $left) {
+                                $left--;
+                                $entities_length += strlen($entity[0]);
+                            } else {
+                                // no more characters left
+                                break;
+                            }
+                        }
+                    }
+                    $truncate .= substr($line_matchings[2], 0, $left + $entities_length);
+                    // maximum lenght is reached, so get off the loop
+                    break;
+                } else {
+                    $truncate .= $line_matchings[2];
+                    $total_length += $content_length;
+                }
+                // if the maximum length is reached, get off the loop
+                if ($total_length >= $length) {
+                    break;
+                }
+            }
+        } else {
+            if (strlen($text) <= $length) {
+                return $text;
+            } else {
+                $truncate = substr($text, 0, $length - strlen($ending));
+            }
+        }
+        // if the words shouldn't be cut in the middle...
+        if (!$exact) {
+            // ...search the last occurance of a space...
+            $spacepos = strrpos($truncate, ' ');
+            if (isset($spacepos)) {
+                // ...and cut the text in this position
+                $truncate = substr($truncate, 0, $spacepos);
+            }
+        }
+        // add the defined ending to the text
+        $truncate .= $ending;
+        if ($considerHtml) {
+            // close all unclosed html-tags
+            foreach ($open_tags as $tag) {
+                $truncate .= '</' . $tag . '>';
+            }
+        }
+        return $truncate;
     }
 
     function manage_interaktiv_columns($column, $post_id)
@@ -580,7 +679,7 @@ class InteraktivPlugin
 
         switch ($column) {
             case self::CONTENT:
-                echo apply_filters(self::THE_CONTENT, $post->post_content);
+                echo apply_filters(self::THE_CONTENT, $this->truncateHtml($post->post_content));
                 break;
             case self::COMMENT_COUNT:
                 echo apply_filters(self::COMMENT_COUNT, $post->comment_count);
@@ -638,18 +737,65 @@ class InteraktivPlugin
         return $columns;
     }
 
-    function interaktiv_post_type_single_theme_file_include($template)
+    function get_column($preamble, $column)
     {
-        global $wp;
+        $value = the_column(get_the_ID(), false, $column);
+        if (isset($value)):
+            return sprintf('%s', $preamble . esc_html($value));
+        endif;
+        return '';
+    }
 
-        if ($wp->query_vars["post_type"] != self::INTERAKTIV)
-            return $template;
+    function interaktiv_the_title($title, $post_id)
+    {
 
-        $file = dirname(__FILE__) . '/interaktiv-single.php';
-        if (file_exists($file)) {
-            $template = $file;
+        $post = get_post($post_id);
+        if ($post->post_type != self::INTERAKTIV) {
+            return $title;
         }
-        return $template;
+
+        $title = the_column($post_id, false, self::TITLE);
+        $name = the_column($post_id, false, self::NAME);
+        $homepage = the_column($post_id, false, self::URL);
+        $phone = the_column($post_id, false, self::PHONE);
+        $email = the_column($post_id, false, self::EMAIL);
+        $location = the_column($post_id, false, self::LOCATION);
+
+        if (!isset($title) or $title == ''):
+            $title = '<div itemscope itemtype="http://schema.org/Person">';
+            if ($name != ''):
+                $title .= '<span class="interactive-entry-title-name" itemprop="name"><strong>' . $name . '</strong></span>';
+            endif;
+            if ($homepage != ''):
+                if ($name != ''):
+                    $title .= '&nbsp;';
+                endif;
+                $title .= '<span itemprop="url">[<a class="interaktiv-entry-title-url" href="' . $homepage . '">' . __('Seite', 'interaktiv-plugin-text-domain') . '</a>]</span>';
+            endif;
+            if ($phone != ''):
+                if ($name != '' || $homepage != ''):
+                    $title .= '&nbsp;';
+                endif;
+                $title .= '<span itemprop="telephone">[<a class="interaktiv-entry-title-phone" href="tel:' . $phone . '">' . __('Telefon', 'interaktiv-plugin-text-domain') . '</a>]</span>';
+            endif;
+            if ($email != ''):
+                if ($name != '' || $homepage != '' || $phone != ''):
+                    $title .= '&nbsp;';
+                endif;
+                $title .= '<span itemprop="email">[<a class="interaktiv-entry-title-email" href="mailto:' . $email . '">' . __('E-Mail', 'interaktiv-plugin-text-domain') . '</a>]</span>';
+            endif;
+            $title .= '<span class="alignright">';
+            if ($location != ''):
+                $title .= $location . ', ';
+            else:
+                $title .= '&nbsp';
+            endif;
+            $title .= the_date('', '', '', false);
+            $title .= '</span>';
+            $title .= '</div>';
+        endif;
+
+        return $title;
     }
 }
 

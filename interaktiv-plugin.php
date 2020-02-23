@@ -737,66 +737,6 @@ class InteraktivPlugin
         return $columns;
     }
 
-    function get_column($preamble, $column)
-    {
-        $value = the_column(get_the_ID(), false, $column);
-        if (isset($value)):
-            return sprintf('%s', $preamble . esc_html($value));
-        endif;
-        return '';
-    }
-
-    function interaktiv_the_title($title, $post_id)
-    {
-
-        $post = get_post($post_id);
-        if ($post->post_type != self::INTERAKTIV) {
-            return $title;
-        }
-
-        $title = the_column($post_id, false, self::TITLE);
-        $name = the_column($post_id, false, self::NAME);
-        $homepage = the_column($post_id, false, self::URL);
-        $phone = the_column($post_id, false, self::PHONE);
-        $email = the_column($post_id, false, self::EMAIL);
-        $location = the_column($post_id, false, self::LOCATION);
-
-        if (!isset($title) or $title == ''):
-            $title = '<div itemscope itemtype="http://schema.org/Person">';
-            if ($name != ''):
-                $title .= '<span class="interactive-entry-title-name" itemprop="name"><strong>' . $name . '</strong></span>';
-            endif;
-            if ($homepage != ''):
-                if ($name != ''):
-                    $title .= '&nbsp;';
-                endif;
-                $title .= '<span itemprop="url">[<a class="interaktiv-entry-title-url" href="' . $homepage . '">' . __('Seite', 'interaktiv-plugin-text-domain') . '</a>]</span>';
-            endif;
-            if ($phone != ''):
-                if ($name != '' || $homepage != ''):
-                    $title .= '&nbsp;';
-                endif;
-                $title .= '<span itemprop="telephone">[<a class="interaktiv-entry-title-phone" href="tel:' . $phone . '">' . __('Telefon', 'interaktiv-plugin-text-domain') . '</a>]</span>';
-            endif;
-            if ($email != ''):
-                if ($name != '' || $homepage != '' || $phone != ''):
-                    $title .= '&nbsp;';
-                endif;
-                $title .= '<span itemprop="email">[<a class="interaktiv-entry-title-email" href="mailto:' . $email . '">' . __('E-Mail', 'interaktiv-plugin-text-domain') . '</a>]</span>';
-            endif;
-            $title .= '<span class="alignright">';
-            if ($location != ''):
-                $title .= $location . ', ';
-            else:
-                $title .= '&nbsp';
-            endif;
-            $title .= the_date('', '', '', false);
-            $title .= '</span>';
-            $title .= '</div>';
-        endif;
-
-        return $title;
-    }
 }
 
 $plugin = new InteraktivPlugin();

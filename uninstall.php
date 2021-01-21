@@ -3,7 +3,7 @@
 /*
  * This file is called when plugin will be uninstalled.
  *
- * @package interaktiv-plugin
+ * @package Open bulletin board plugin
  */
 
 if (! defined('WP_UNINSTALL_PLUGIN')) {

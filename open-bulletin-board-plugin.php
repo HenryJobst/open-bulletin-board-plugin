@@ -1,16 +1,16 @@
 <?php
 
 /*
-Plugin Name: Interaktiv Plugin
+Plugin Name: Open Bulletin Board Plugin
 Plugin URI: https://github.com/HenryJobst/interaktiv-plugin
-Description: This plugin add a new custom post type "Interaktiv", which is editable for all registered users.
-Version: 1.0.4
+Description: This plugin add a new custom post type "Bulletin board" (post_type name "interaktiv"), which is editable for all registered users.
+Version: 1.0.5
 Author: Henry Jobst
 Author URI: https://github.com/HenryJobst
-Text Domain: interaktiv-plugin-text-domain
+Text Domain: open-bulletin-board-plugin-text-domain
 License: MIT License
 
-Copyright (c) 2020 {Author}
+Copyright (c) 2020-2021 {Author}
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -47,10 +47,10 @@ function the_column($post_id = 0, $echo = true, $column = 'name')
         return $value;
 }
 
-class InteraktivPlugin
+class OpenBulletinBoardPlugin
 {
     // post type name
-    const INTERAKTIV = 'interaktiv';
+    const OPEN_BULLETIN_BOARD_POST_TYPE = 'interaktiv';
 
     // roles
     const SUBSCRIBER_ROLE = 'subscriber';
@@ -60,25 +60,25 @@ class InteraktivPlugin
     const ADMIN_ROLE = 'administrator';
 
     // Meta capabilities
-    const EDIT_INTERAKTIV = 'edit_interaktiv';
-    const READ_INTERAKTIV = 'read_interaktiv';
-    const DELETE_INTERAKTIV = 'delete_interaktiv';
+    const EDIT_OPBBRD = 'edit_opbbrd';
+    const READ_OPBBRD = 'read_opbbrd';
+    const DELETE_OPBBRD = 'delete_opbbrd';
 
     // Primitive capabilities used outside of map_meta_cap():
-    const EDIT_INTERAKTIVS = "edit_interaktivs";
-    const EDIT_OTHERS_INTERAKTIVS = 'edit_others_interaktivs';
-    const PUBLISH_INTERAKTIVS = 'publish_interaktivs';
-    const READ_PRIVATE_INTERAKTIVS = 'read_private_interaktivs';
+    const EDIT_OPBBRDS = "edit_opbbrds";
+    const EDIT_OTHERS_OPBBRDS = 'edit_others_opbbrds';
+    const PUBLISH_OPBBRDS = 'publish_opbbrds';
+    const READ_PRIVATE_OPBBRDS = 'read_private_opbbrds';
 
     // Primitive capabilities used within map_meta_cap():
     const READ = 'read';
-    const DELETE_INTERAKTIVS = 'delete_interaktivs';
-    const DELETE_PRIVATE_INTERAKTIVS = 'delete_private_interaktivs';
-    const DELETE_PUBLISHED_INTERAKTIVS = 'delete_published_interaktivs';
-    const DELETE_OTHERS_INTERAKTIVS = 'delete_others_interaktivs';
-    const EDIT_PRIVATE_INTERAKTIVS = 'edit_private_interaktivs';
-    const EDIT_PUBLISHED_INTERAKTIVS = 'edit_published_interaktivs';
-    const CREATE_INTERAKTIVS = 'create_interaktivs';
+    const DELETE_OPBBRDS = 'delete_opbbrds';
+    const DELETE_PRIVATE_OPBBRDS = 'delete_private_opbbrds';
+    const DELETE_PUBLISHED_OPBBRDS = 'delete_published_opbbrds';
+    const DELETE_OTHERS_OPBBRDS = 'delete_others_opbbrds';
+    const EDIT_PRIVATE_OPBBRDS = 'edit_private_opbbrds';
+    const EDIT_PUBLISHED_OPBBRDS = 'edit_published_opbbrds';
+    const CREATE_OPBBRDS = 'create_opbbrds';
 
     const EDIT_COMMENT = 'edit_comment';
     const MODERATE_COMMENTS = 'moderate_comments';
@@ -112,7 +112,7 @@ class InteraktivPlugin
 
     const META_BOX = '_meta_box';
     const META_BOX_NONCE = self::META_BOX . '_nonce';
-    const PLUGIN_PREFIX = self::INTERAKTIV . '_' . self::POST_TYPE . '_';
+    const PLUGIN_PREFIX = self::OPEN_BULLETIN_BOARD_POST_TYPE . '_' . self::POST_TYPE . '_';
 
     const NAME_META_BOX_NONCE = self::PLUGIN_PREFIX . self::NAME . self::META_BOX_NONCE;
     const URL_META_BOX_NONCE = self::PLUGIN_PREFIX . self::URL . self::META_BOX_NONCE;
@@ -123,46 +123,46 @@ class InteraktivPlugin
     function __construct()
     {
         // add custom post type
-        add_action('init', array($this, 'register_interaktiv'));
+        add_action('init', array($this, 'register_opbbrd'));
 
         // set special mapping function for per post capabilities
-        add_filter('map_meta_cap', array($this, 'interaktiv_map_meta_cap'),
+        add_filter('map_meta_cap', array($this, 'opbbrd_map_meta_cap'),
             self::ADD_PRIORITY, self::ADD_PARAMETER_COUNT4);
 
         // add custom post type to standard post loop
-        add_action('pre_get_posts', array($this, 'add_interaktiv_to_post_type'));
+        add_action('pre_get_posts', array($this, 'add_opbbrd_to_post_type'));
 
         // set post format filter
-        add_action('load-post.php', array($this, 'interaktiv_post_format_support_filter'));
-        add_action('load-post-new.php', array($this, 'interaktiv_post_format_support_filter'));
-        add_action('load-edit.php', array($this, 'interaktiv_post_format_support_filter'));
+        add_action('load-post.php', array($this, 'opbbrd_post_format_support_filter'));
+        add_action('load-post-new.php', array($this, 'opbbrd_post_format_support_filter'));
+        add_action('load-edit.php', array($this, 'opbbrd_post_format_support_filter'));
 
         // Filter the default post format.
-        add_filter('option_default_post_format', array($this, 'interaktiv_default_post_format_filter'));
+        add_filter('option_default_post_format', array($this, 'opbbrd_default_post_format_filter'));
 
         // Set columns for custom post type
-        add_filter('manage_edit-interaktiv_columns', array($this, 'interaktiv_columns'));
+        add_filter('manage_edit-opbbrd_columns', array($this, 'opbbrd_columns'));
 
         // Set custom columns for custom post type
-        add_action('manage_interaktiv_posts_custom_column', array($this, 'manage_interaktiv_columns'),
+        add_action('manage_opbbrd_posts_custom_column', array($this, 'manage_opbbrd_columns'),
             self::ADD_PRIORITY, self::ADD_PARAMETER_COUNT2);
 
         // Set custom sortable columns for custom post type
-        add_filter('manage_edit-interaktiv_sortable_columns', array($this, 'interaktiv_sortable_columns'));
+        add_filter('manage_edit-opbbrd_sortable_columns', array($this, 'opbbrd_sortable_columns'));
 
         // Add meta boxes
-        add_action('add_meta_boxes_interaktiv', array($this, 'interaktiv_post_type_add_meta_boxes'));
+        add_action('add_meta_boxes_opbbrd', array($this, 'opbbrd_post_type_add_meta_boxes'));
 
         // Add save of meta boxes
-        add_action('save_post_interaktiv', array($this, 'interaktiv_post_type_save_name_meta_boxes_data'),
+        add_action('save_post_opbbrd', array($this, 'opbbrd_post_type_save_name_meta_boxes_data'),
             self::ADD_PRIORITY, self::ADD_PARAMETER_COUNT2);
-        add_action('save_post_interaktiv', array($this, 'interaktiv_post_type_save_url_meta_boxes_data'),
+        add_action('save_post_opbbrd', array($this, 'opbbrd_post_type_save_url_meta_boxes_data'),
             self::ADD_PRIORITY, self::ADD_PARAMETER_COUNT2);
-        add_action('save_post_interaktiv', array($this, 'interaktiv_post_type_save_phone_meta_boxes_data'),
+        add_action('save_post_opbbrd', array($this, 'opbbrd_post_type_save_phone_meta_boxes_data'),
             self::ADD_PRIORITY, self::ADD_PARAMETER_COUNT2);
-        add_action('save_post_interaktiv', array($this, 'interaktiv_post_type_save_email_meta_boxes_data'),
+        add_action('save_post_opbbrd', array($this, 'opbbrd_post_type_save_email_meta_boxes_data'),
             self::ADD_PRIORITY, self::ADD_PARAMETER_COUNT2);
-        add_action('save_post_interaktiv', array($this, 'interaktiv_post_type_save_location_meta_boxes_data'),
+        add_action('save_post_opbbrd', array($this, 'opbbrd_post_type_save_location_meta_boxes_data'),
             self::ADD_PRIORITY, self::ADD_PARAMETER_COUNT2);
 
     }
@@ -176,137 +176,137 @@ class InteraktivPlugin
     function deactivate()
     {
         $this->unset_rights();
-        $this->unregister_interaktiv();
+        $this->unregister_opbbrd();
         flush_rewrite_rules();
     }
 
-    function enable_edit_interaktiv_for_all()
+    function enable_edit_opbbrd_for_all()
     {
         foreach (array(self::SUBSCRIBER_ROLE, self::CONTRIBUTOR_ROLE, self::AUTHOR_ROLE, self::EDITOR_ROLE, self::ADMIN_ROLE) as $role_name) {
             $role = get_role($role_name);
-            $role->add_cap(self::CREATE_INTERAKTIVS);
-            $role->add_cap(self::EDIT_INTERAKTIVS);
-            $role->add_cap(self::DELETE_INTERAKTIVS);
-            $role->add_cap(self::PUBLISH_INTERAKTIVS);
-            $role->add_cap(self::EDIT_PUBLISHED_INTERAKTIVS);
+            $role->add_cap(self::CREATE_OPBBRDS);
+            $role->add_cap(self::EDIT_OPBBRDS);
+            $role->add_cap(self::DELETE_OPBBRDS);
+            $role->add_cap(self::PUBLISH_OPBBRDS);
+            $role->add_cap(self::EDIT_PUBLISHED_OPBBRDS);
         }
     }
 
-    function disable_edit_interaktiv_for_all()
+    function disable_edit_opbbrd_for_all()
     {
         foreach (array(self::SUBSCRIBER_ROLE, self::CONTRIBUTOR_ROLE, self::AUTHOR_ROLE, self::EDITOR_ROLE, self::ADMIN_ROLE) as $role_name) {
             $role = get_role($role_name);
-            $role->remove_cap(self::CREATE_INTERAKTIVS);
-            $role->remove_cap(self::EDIT_INTERAKTIVS);
-            $role->remove_cap(self::DELETE_INTERAKTIVS);
-            $role->remove_cap(self::PUBLISH_INTERAKTIVS);
-            $role->remove_cap(self::EDIT_PUBLISHED_INTERAKTIVS);
+            $role->remove_cap(self::CREATE_OPBBRDS);
+            $role->remove_cap(self::EDIT_OPBBRDS);
+            $role->remove_cap(self::DELETE_OPBBRDS);
+            $role->remove_cap(self::PUBLISH_OPBBRDS);
+            $role->remove_cap(self::EDIT_PUBLISHED_OPBBRDS);
         }
     }
 
-    function enable_others_interaktiv_for_editor()
+    function enable_others_opbbrd_for_editor()
     {
         foreach (array(self::EDITOR_ROLE, self::ADMIN_ROLE) as $role_name) {
             $role = get_role($role_name);
-            $role->add_cap(self::EDIT_OTHERS_INTERAKTIVS);
-            $role->add_cap(self::DELETE_OTHERS_INTERAKTIVS);
-            $role->add_cap(self::READ_PRIVATE_INTERAKTIVS);
-            $role->add_cap(self::EDIT_PUBLISHED_INTERAKTIVS);
-            $role->add_cap(self::EDIT_PRIVATE_INTERAKTIVS);
-            $role->add_cap(self::DELETE_PUBLISHED_INTERAKTIVS);
-            $role->add_cap(self::DELETE_PRIVATE_INTERAKTIVS);
+            $role->add_cap(self::EDIT_OTHERS_OPBBRDS);
+            $role->add_cap(self::DELETE_OTHERS_OPBBRDS);
+            $role->add_cap(self::READ_PRIVATE_OPBBRDS);
+            $role->add_cap(self::EDIT_PUBLISHED_OPBBRDS);
+            $role->add_cap(self::EDIT_PRIVATE_OPBBRDS);
+            $role->add_cap(self::DELETE_PUBLISHED_OPBBRDS);
+            $role->add_cap(self::DELETE_PRIVATE_OPBBRDS);
         }
     }
 
-    function disable_others_interaktiv_for_editor()
+    function disable_others_opbbrd_for_editor()
     {
         foreach (array(self::EDITOR_ROLE, self::ADMIN_ROLE) as $role_name) {
             $role = get_role($role_name);
-            $role->remove_cap(self::EDIT_OTHERS_INTERAKTIVS);
-            $role->remove_cap(self::DELETE_OTHERS_INTERAKTIVS);
-            $role->remove_cap(self::READ_PRIVATE_INTERAKTIVS);
-            $role->remove_cap(self::EDIT_PUBLISHED_INTERAKTIVS);
-            $role->remove_cap(self::EDIT_PRIVATE_INTERAKTIVS);
-            $role->remove_cap(self::DELETE_PUBLISHED_INTERAKTIVS);
-            $role->remove_cap(self::DELETE_PRIVATE_INTERAKTIVS);
+            $role->remove_cap(self::EDIT_OTHERS_OPBBRDS);
+            $role->remove_cap(self::DELETE_OTHERS_OPBBRDS);
+            $role->remove_cap(self::READ_PRIVATE_OPBBRDS);
+            $role->remove_cap(self::EDIT_PUBLISHED_OPBBRDS);
+            $role->remove_cap(self::EDIT_PRIVATE_OPBBRDS);
+            $role->remove_cap(self::DELETE_PUBLISHED_OPBBRDS);
+            $role->remove_cap(self::DELETE_PRIVATE_OPBBRDS);
         }
     }
 
     function set_rights()
     {
-        $this->enable_edit_interaktiv_for_all();
-        $this->enable_others_interaktiv_for_editor();
+        $this->enable_edit_opbbrd_for_all();
+        $this->enable_others_opbbrd_for_editor();
     }
 
     function unset_rights()
     {
-        $this->disable_edit_interaktiv_for_all();
-        $this->disable_others_interaktiv_for_editor();
+        $this->disable_edit_opbbrd_for_all();
+        $this->disable_others_opbbrd_for_editor();
     }
 
-    function register_interaktiv()
+    function register_opbbrd()
     {
         $labels = array(
-            'name' => __('Interaktiv', 'interaktiv-plugin-text-domain'),
-            'singular_name' => __('Interaktiv', 'interaktiv-plugin-text-domain'),
-            'menu_name' => __('Interaktiv', 'interaktiv-plugin-text-domain'),
-            'name_admin_bar' => __('Interaktiv', 'interaktiv-plugin-text-domain'),
-            'archives' => __('Archiv', 'interaktiv-plugin-text-domain'),
-            'attributes' => __('Attribute', 'interaktiv-plugin-text-domain'),
-            'parent_item_colon' => __('Eltern Eintrag:', 'interaktiv-plugin-text-domain'),
-            'all_items' => __('Alle Einträge', 'interaktiv-plugin-text-domain'),
-            'add_new_item' => __('Neuer Eintrag', 'interaktiv-plugin-text-domain'),
-            'add_new' => __('Erstellen', 'interaktiv-plugin-text-domain'),
-            'new_item' => __('Neuer Eintrag', 'interaktiv-plugin-text-domain'),
-            'edit_item' => __('Bearbeite Eintrag', 'interaktiv-plugin-text-domain'),
-            'update_item' => __('Aktualisiere Eintrag', 'interaktiv-plugin-text-domain'),
-            'view_item' => __('Zeige Eintrag', 'interaktiv-plugin-text-domain'),
-            'view_items' => __('Zeige Einträge', 'interaktiv-plugin-text-domain'),
-            'search_items' => __('Suche Einträge', 'interaktiv-plugin-text-domain'),
-            'not_found' => __('Nicht gefunden', 'interaktiv-plugin-text-domain'),
-            'not_found_in_trash' => __('Nicht im Papierkorb gefunden', 'interaktiv-plugin-text-domain'),
-            'featured_image' => __('Bild', 'interaktiv-plugin-text-domain'),
-            'set_featured_image' => __('Setze Bild', 'interaktiv-plugin-text-domain'),
-            'remove_featured_image' => __('Entferne Bild', 'interaktiv-plugin-text-domain'),
-            'use_featured_image' => __('Nutze als Bild', 'interaktiv-plugin-text-domain'),
-            'insert_into_item' => __('Füge dem Eintrag hinzu', 'interaktiv-plugin-text-domain'),
-            'uploaded_to_this_item' => __('Upload für den Eintrag', 'interaktiv-plugin-text-domain'),
-            'items_list' => __('Eintragsliste', 'interaktiv-plugin-text-domain'),
-            'items_list_navigation' => __('Eintragsliste Navigation', 'interaktiv-plugin-text-domain'),
-            'filter_items_list' => __('Filtere Eintragsliste', 'interaktiv-plugin-text-domain'),
-            'item_published' => __('Eintrag veröffentlicht.', 'interaktiv-plugin-text-domain'),
-            'item_published_privately' => __('Eintrag privat veröffentlicht', 'interaktiv-plugin-text-domain'),
-            'item_reverted_to_draft' => __('Eintrag zum Entwurf zurückgestuft.', 'interaktiv-plugin-text-domain'),
-            'item_scheduled' => __('Eintrag eingeplant.', 'interaktiv-plugin-text-domain'),
-            'item_updated' => __('Eintrag aktualisiert', 'interaktiv-plugin-text-domain'),
+            'name' => __('Bulletin board items', 'open-bulletin-board-plugin-text-domain'),
+            'singular_name' => __('Bulletin board item', 'open-bulletin-board-plugin-text-domain'),
+            'menu_name' => __('Bulletin board', 'open-bulletin-board-plugin-text-domain'),
+            'name_admin_bar' => __('Bulletin board', 'open-bulletin-board-plugin-text-domain'),
+            'archives' => __('Archives', 'open-bulletin-board-plugin-text-domain'),
+            'attributes' => __('Attributes', 'open-bulletin-board-plugin-text-domain'),
+            'parent_item_colon' => __('Parent item:', 'open-bulletin-board-plugin-text-domain'),
+            'all_items' => __('All items', 'open-bulletin-board-plugin-text-domain'),
+            'add_new_item' => __('Add new item', 'open-bulletin-board-plugin-text-domain'),
+            'add_new' => __('Add new', 'open-bulletin-board-plugin-text-domain'),
+            'new_item' => __('New item', 'open-bulletin-board-plugin-text-domain'),
+            'edit_item' => __('Edit item', 'open-bulletin-board-plugin-text-domain'),
+            'update_item' => __('Update item', 'open-bulletin-board-plugin-text-domain'),
+            'view_item' => __('View item', 'open-bulletin-board-plugin-text-domain'),
+            'view_items' => __('View items', 'open-bulletin-board-plugin-text-domain'),
+            'search_items' => __('Search items', 'open-bulletin-board-plugin-text-domain'),
+            'not_found' => __('Not found', 'open-bulletin-board-plugin-text-domain'),
+            'not_found_in_trash' => __('Not found in trash bin', 'open-bulletin-board-plugin-text-domain'),
+            'featured_image' => __('Image', 'open-bulletin-board-plugin-text-domain'),
+            'set_featured_image' => __('Set image', 'open-bulletin-board-plugin-text-domain'),
+            'remove_featured_image' => __('Remove image', 'open-bulletin-board-plugin-text-domain'),
+            'use_featured_image' => __('Use image', 'open-bulletin-board-plugin-text-domain'),
+            'insert_into_item' => __('Insert into item', 'open-bulletin-board-plugin-text-domain'),
+            'uploaded_to_this_item' => __('Upload to this item', 'open-bulletin-board-plugin-text-domain'),
+            'items_list' => __('Items list', 'open-bulletin-board-plugin-text-domain'),
+            'items_list_navigation' => __('Items list navigation', 'open-bulletin-board-plugin-text-domain'),
+            'filter_items_list' => __('Filter items list', 'open-bulletin-board-plugin-text-domain'),
+            'item_published' => __('Item published', 'open-bulletin-board-plugin-text-domain'),
+            'item_published_privately' => __('Item published privately', 'open-bulletin-board-plugin-text-domain'),
+            'item_reverted_to_draft' => __('Item reverted to draft', 'open-bulletin-board-plugin-text-domain'),
+            'item_scheduled' => __('Item scheduled', 'open-bulletin-board-plugin-text-domain'),
+            'item_updated' => __('Item updated', 'open-bulletin-board-plugin-text-domain'),
         );
 
         $capabilities = array(
             // Meta capabilities
-            'edit_post' => self::EDIT_INTERAKTIV,
-            'read_post' => self::READ_INTERAKTIV,
-            'delete_post' => self::DELETE_INTERAKTIV,
+            'edit_post' => self::EDIT_OPBBRD,
+            'read_post' => self::READ_OPBBRD,
+            'delete_post' => self::DELETE_OPBBRD,
 
             // Primitive capabilities used outside of map_meta_cap():
-            'edit_posts' => self::EDIT_INTERAKTIVS,
-            'edit_others_posts' => self::EDIT_OTHERS_INTERAKTIVS,
-            'publish_posts' => self::PUBLISH_INTERAKTIVS,
-            'read_private_posts' => self::READ_PRIVATE_INTERAKTIVS,
+            'edit_posts' => self::EDIT_OPBBRDS,
+            'edit_others_posts' => self::EDIT_OTHERS_OPBBRDS,
+            'publish_posts' => self::PUBLISH_OPBBRDS,
+            'read_private_posts' => self::READ_PRIVATE_OPBBRDS,
 
             // Primitive capabilities used within map_meta_cap():
             'read' => self::READ,
-            'delete_posts' => self::DELETE_INTERAKTIVS,
-            'delete_private_posts' => self::DELETE_PRIVATE_INTERAKTIVS,
-            'delete_published_posts' => self::DELETE_PUBLISHED_INTERAKTIVS,
-            'delete_others_posts' => self::DELETE_OTHERS_INTERAKTIVS,
-            'edit_private_posts' => self::DELETE_PRIVATE_INTERAKTIVS,
-            'edit_published_posts' => self::EDIT_PUBLISHED_INTERAKTIVS,
-            'create_posts' => self::CREATE_INTERAKTIVS,
+            'delete_posts' => self::DELETE_OPBBRDS,
+            'delete_private_posts' => self::DELETE_PRIVATE_OPBBRDS,
+            'delete_published_posts' => self::DELETE_PUBLISHED_OPBBRDS,
+            'delete_others_posts' => self::DELETE_OTHERS_OPBBRDS,
+            'edit_private_posts' => self::DELETE_PRIVATE_OPBBRDS,
+            'edit_published_posts' => self::EDIT_PUBLISHED_OPBBRDS,
+            'create_posts' => self::CREATE_OPBBRDS,
         );
 
         $args = array(
-            'label' => __('Interaktiv', 'interaktiv-plugin-text-domain'),
-            'description' => __('Grünes Brett etc.', 'interaktiv-plugin-text-domain'),
+            'label' => __('Bulletin board', 'open-bulletin-board-plugin-text-domain'),
+            'description' => __('Digital bulletin board', 'open-bulletin-board-plugin-text-domain'),
             'labels' => $labels,
             'supports' => array(self::AUTHOR, self::TITLE, 'editor', 'comments', 'post-formats'),
             'taxonomies' => array(self::POST_TAG),
@@ -322,23 +322,23 @@ class InteraktivPlugin
             'has_archive' => true,
             'exclude_from_search' => false,
             'publicly_queryable' => true,
-            'capability_type' => self::INTERAKTIV,
+            'capability_type' => self::OPEN_BULLETIN_BOARD_POST_TYPE,
             'capabilities' => $capabilities,
             'meta_map_cap' => false,
             'delete_with_user' => false, // keep content when user will be deleted or trashed
-            'rewrite' => array('slug' => __(self::INTERAKTIV), 'with_front' => false),
+            'rewrite' => array('slug' => __(self::OPEN_BULLETIN_BOARD_POST_TYPE), 'with_front' => false),
         );
-        register_post_type(self::INTERAKTIV, $args);
+        register_post_type(self::OPEN_BULLETIN_BOARD_POST_TYPE, $args);
 
         flush_rewrite_rules();
 
     }
 
-    function add_custom_interaktiv_meta_box($meta_box_id, $meta_box_title)
+    function add_custom_opbbrd_meta_box($meta_box_id, $meta_box_title)
     {
         $html_id_attribute = self::PLUGIN_PREFIX . $meta_box_id . self::META_BOX;
         $php_callback_function = array($this, self::PLUGIN_PREFIX . 'build_' . $meta_box_id . self::META_BOX);
-        $show_me_on_post_type = self::INTERAKTIV;
+        $show_me_on_post_type = self::OPEN_BULLETIN_BOARD_POST_TYPE;
         $box_placement = 'side';
         $box_priority = 'low';
 
@@ -352,16 +352,16 @@ class InteraktivPlugin
         );
     }
 
-    function interaktiv_post_type_add_meta_boxes($post)
+    function opbbrd_post_type_add_meta_boxes($post)
     {
-        $this->add_custom_interaktiv_meta_box(self::NAME, __('Name', 'interaktiv-plugin-text-domain'));
-        $this->add_custom_interaktiv_meta_box(self::URL, __('Homepage', 'interaktiv-plugin-text-domain'));
-        $this->add_custom_interaktiv_meta_box(self::PHONE, __('Telefon', 'interaktiv-plugin-text-domain'));
-        $this->add_custom_interaktiv_meta_box(self::EMAIL, __('E-Mail', 'interaktiv-plugin-text-domain'));
-        $this->add_custom_interaktiv_meta_box(self::LOCATION, __('Ort', 'interaktiv-plugin-text-domain'));
+        $this->add_custom_opbbrd_meta_box(self::NAME, __('Name', 'open-bulletin-board-plugin-text-domain'));
+        $this->add_custom_opbbrd_meta_box(self::URL, __('URL', 'open-bulletin-board-plugin-text-domain'));
+        $this->add_custom_opbbrd_meta_box(self::PHONE, __('Phone', 'open-bulletin-board-plugin-text-domain'));
+        $this->add_custom_opbbrd_meta_box(self::EMAIL, __('Mail', 'open-bulletin-board-plugin-text-domain'));
+        $this->add_custom_opbbrd_meta_box(self::LOCATION, __('Location', 'open-bulletin-board-plugin-text-domain'));
     }
 
-    function interaktiv_post_type_build_meta_box($post, $column)
+    function opbbrd_post_type_build_meta_box($post, $column)
     {
         $column_nonce = self::PLUGIN_PREFIX . $column . self::META_BOX_NONCE;
         wp_nonce_field(basename(__FILE__), $column_nonce);
@@ -381,32 +381,32 @@ class InteraktivPlugin
         <?php
     }
 
-    function interaktiv_post_type_build_name_meta_box($post)
+    function opbbrd_post_type_build_name_meta_box($post)
     {
-        $this->interaktiv_post_type_build_meta_box($post, self::NAME);
+        $this->opbbrd_post_type_build_meta_box($post, self::NAME);
     }
 
-    function interaktiv_post_type_build_url_meta_box($post)
+    function opbbrd_post_type_build_url_meta_box($post)
     {
-        $this->interaktiv_post_type_build_meta_box($post, self::URL);
+        $this->opbbrd_post_type_build_meta_box($post, self::URL);
     }
 
-    function interaktiv_post_type_build_phone_meta_box($post)
+    function opbbrd_post_type_build_phone_meta_box($post)
     {
-        $this->interaktiv_post_type_build_meta_box($post, self::PHONE);
+        $this->opbbrd_post_type_build_meta_box($post, self::PHONE);
     }
 
-    function interaktiv_post_type_build_email_meta_box($post)
+    function opbbrd_post_type_build_email_meta_box($post)
     {
-        $this->interaktiv_post_type_build_meta_box($post, self::EMAIL);
+        $this->opbbrd_post_type_build_meta_box($post, self::EMAIL);
     }
 
-    function interaktiv_post_type_build_location_meta_box($post)
+    function opbbrd_post_type_build_location_meta_box($post)
     {
-        $this->interaktiv_post_type_build_meta_box($post, self::LOCATION);
+        $this->opbbrd_post_type_build_meta_box($post, self::LOCATION);
     }
 
-    function interaktiv_post_type_save_meta_boxes_data($post_id, $column)
+    function opbbrd_post_type_save_meta_boxes_data($post_id, $column)
     {
         $column_nonce = self::PLUGIN_PREFIX . $column . self::META_BOX_NONCE;
 
@@ -429,29 +429,29 @@ class InteraktivPlugin
         }
     }
 
-    function interaktiv_post_type_save_name_meta_boxes_data($post_id)
+    function opbbrd_post_type_save_name_meta_boxes_data($post_id)
     {
-        $this->interaktiv_post_type_save_meta_boxes_data($post_id, self::NAME);
+        $this->opbbrd_post_type_save_meta_boxes_data($post_id, self::NAME);
     }
 
-    function interaktiv_post_type_save_url_meta_boxes_data($post_id)
+    function opbbrd_post_type_save_url_meta_boxes_data($post_id)
     {
-        $this->interaktiv_post_type_save_meta_boxes_data($post_id, self::URL);
+        $this->opbbrd_post_type_save_meta_boxes_data($post_id, self::URL);
     }
 
-    function interaktiv_post_type_save_phone_meta_boxes_data($post_id)
+    function opbbrd_post_type_save_phone_meta_boxes_data($post_id)
     {
-        $this->interaktiv_post_type_save_meta_boxes_data($post_id, self::PHONE);
+        $this->opbbrd_post_type_save_meta_boxes_data($post_id, self::PHONE);
     }
 
-    function interaktiv_post_type_save_email_meta_boxes_data($post_id)
+    function opbbrd_post_type_save_email_meta_boxes_data($post_id)
     {
-        $this->interaktiv_post_type_save_meta_boxes_data($post_id, self::EMAIL);
+        $this->opbbrd_post_type_save_meta_boxes_data($post_id, self::EMAIL);
     }
 
-    function interaktiv_post_type_save_location_meta_boxes_data($post_id)
+    function opbbrd_post_type_save_location_meta_boxes_data($post_id)
     {
-        $this->interaktiv_post_type_save_meta_boxes_data($post_id, self::LOCATION);
+        $this->opbbrd_post_type_save_meta_boxes_data($post_id, self::LOCATION);
     }
 
     function the_name($post = 0, $echo = true)
@@ -459,17 +459,17 @@ class InteraktivPlugin
         return the_column($post, $echo, self::NAME);
     }
 
-    function add_interaktiv_to_post_type($query)
+    function add_opbbrd_to_post_type($query)
     {
         if ((is_home() && $query->is_main_query()) || is_feed()) {
-            $query->set(self::POST_TYPE, array(self::POST, self::INTERAKTIV));
+            $query->set(self::POST_TYPE, array(self::POST, self::OPEN_BULLETIN_BOARD_POST_TYPE));
         }
     }
 
-    function interaktiv_map_meta_cap($caps, $cap, $user_id, $args)
+    function opbbrd_map_meta_cap($caps, $cap, $user_id, $args)
     {
         /* If editing, deleting, or reading a entry, get the post and post type object. */
-        if (self::EDIT_INTERAKTIV == $cap || self::DELETE_INTERAKTIV == $cap || self::READ_INTERAKTIV == $cap) {
+        if (self::EDIT_OPBBRD == $cap || self::DELETE_OPBBRD == $cap || self::READ_OPBBRD == $cap) {
             $post = get_post($args[0]);
             $post_type = get_post_type_object($post->post_type);
             $caps = array();
@@ -478,19 +478,19 @@ class InteraktivPlugin
         }
 
         /* If editing a entry, assign the required capability. */
-        if (self::EDIT_INTERAKTIV == $cap) {
+        if (self::EDIT_OPBBRD == $cap) {
             if ($user_id == $post->post_author)
                 $caps[] = $post_type->cap->edit_posts;
             else
                 $caps[] = $post_type->cap->edit_others_posts;
         } /* If deleting a entry, assign the required capability. */
-        elseif (self::DELETE_INTERAKTIV == $cap) {
+        elseif (self::DELETE_OPBBRD == $cap) {
             if ($user_id == $post->post_author)
                 $caps[] = $post_type->cap->delete_posts;
             else
                 $caps[] = $post_type->cap->delete_others_posts;
         } /* If reading a entry, assign the required capability. */
-        elseif (self::READ_INTERAKTIV == $cap) {
+        elseif (self::READ_OPBBRD == $cap) {
             if (self::PRIVATE != $post->post_status)
                 $caps[] = self::READ;
             elseif ($user_id == $post->post_author)
@@ -504,23 +504,23 @@ class InteraktivPlugin
         return $caps;
     }
 
-    function unregister_interaktiv()
+    function unregister_opbbrd()
     {
-        unregister_post_type(self::INTERAKTIV);
+        unregister_post_type(self::OPEN_BULLETIN_BOARD_POST_TYPE);
     }
 
 
-    function get_interaktiv_allowed_project_formats()
+    function get_opbbrd_allowed_project_formats()
     {
         return array('aside', 'status');
     }
 
-    function interaktiv_post_format_support_filter()
+    function opbbrd_post_format_support_filter()
     {
         $screen = get_current_screen();
 
         // Bail if not on the projects screen.
-        if (empty($screen->post_type) || $screen->post_type !== self::INTERAKTIV)
+        if (empty($screen->post_type) || $screen->post_type !== self::OPEN_BULLETIN_BOARD_POST_TYPE)
             return;
 
         // Check if the current theme supports formats.
@@ -530,7 +530,7 @@ class InteraktivPlugin
 
             // If we have formats, add theme support for only the allowed formats.
             if (isset($formats[0])) {
-                $new_formats = array_intersect($formats[0], $this->get_interaktiv_allowed_project_formats());
+                $new_formats = array_intersect($formats[0], $this->get_opbbrd_allowed_project_formats());
 
                 // Remove post formats support.
                 remove_theme_support(self::POST_FORMATS);
@@ -544,26 +544,26 @@ class InteraktivPlugin
     }
 
 
-    function interaktiv_default_post_format_filter($format)
+    function opbbrd_default_post_format_filter($format)
     {
-        return in_array($format, $this->get_interaktiv_allowed_project_formats()) ? $format : 'Standard';
+        return in_array($format, $this->get_opbbrd_allowed_project_formats()) ? $format : 'Standard';
     }
 
-    function interaktiv_columns($columns)
+    function opbbrd_columns($columns)
     {
         $columns = array(
             self::CB => '&lt;input type="checkbox" />',
-            self::TITLE => __('Titel', 'interaktiv-plugin-text-domain'),
-            self::CONTENT => __('Inhalt', 'interaktiv-plugin-text-domain'),
-            self::NAME => __('Name', 'interaktiv-plugin-text-domain'),
-            self::URL => __('Homepage', 'interaktiv-plugin-text-domain'),
-            self::PHONE => __('Telefon', 'interaktiv-plugin-text-domain'),
-            self::EMAIL => __('E-Mail', 'interaktiv-plugin-text-domain'),
-            self::AUTHOR => __('Autor', 'interaktiv-plugin-text-domain'),
-            self::POST_TAG => __('Schlagwörter', 'interaktiv-plugin-text-domain'),
-            self::COMMENT_COUNT => __('Kommentare', 'interaktiv-plugin-text-domain'),
-            self::LOCATION => __('Ort', 'interaktiv-plugin-text-domain'),
-            self::DATE => __('Datum', 'interaktiv-plugin-text-domain')
+            self::TITLE => __('Title', 'open-bulletin-board-plugin-text-domain'),
+            self::CONTENT => __('Content', 'open-bulletin-board-plugin-text-domain'),
+            self::NAME => __('Name', 'open-bulletin-board-plugin-text-domain'),
+            self::URL => __('URL', 'open-bulletin-board-plugin-text-domain'),
+            self::PHONE => __('Phone', 'open-bulletin-board-plugin-text-domain'),
+            self::EMAIL => __('Mail', 'open-bulletin-board-plugin-text-domain'),
+            self::AUTHOR => __('Autor', 'open-bulletin-board-plugin-text-domain'),
+            self::POST_TAG => __('Tags', 'open-bulletin-board-plugin-text-domain'),
+            self::COMMENT_COUNT => __('Comment', 'open-bulletin-board-plugin-text-domain'),
+            self::LOCATION => __('Location', 'open-bulletin-board-plugin-text-domain'),
+            self::DATE => __('Date', 'open-bulletin-board-plugin-text-domain')
         );
         return $columns;
     }
@@ -671,7 +671,7 @@ class InteraktivPlugin
         return $truncate;
     }
 
-    function manage_interaktiv_columns($column, $post_id)
+    function manage_opbbrd_columns($column, $post_id)
     {
         global $post;
         $post = get_post($post_id);
@@ -721,7 +721,7 @@ class InteraktivPlugin
         }
     }
 
-    function interaktiv_sortable_columns($columns)
+    function opbbrd_sortable_columns($columns)
     {
         $columns[self::TITLE] = self::TITLE;
         $columns[self::AUTHOR] = self::AUTHOR;
@@ -739,7 +739,7 @@ class InteraktivPlugin
 
 }
 
-$plugin = new InteraktivPlugin();
+$plugin = new OpenBulletinBoardPlugin();
 
 register_activation_hook(__FILE__, array($plugin, 'activate'));
 register_deactivation_hook(__FILE__, array($plugin, 'deactivate'));

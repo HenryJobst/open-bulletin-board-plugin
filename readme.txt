@@ -1,31 +1,34 @@
-=== interaktiv-plugin ===
+=== Open bulletin board plugin ===
 Requires at least: 5.3.2
 License: MIT License
 
-Das Plugin legt den Inhaltstyp "Interaktiv" an.
+This Plugin create a new custom post type "Bulletin board" (with post_type name "interaktiv").
 
-== Beschreibung ==
+== Description ==
 
-Es wird der Inhaltstyp "Interaktiv" hinzugefügt, welcher bereits von einem Abonnent bearbeitet werden kann.
+The new post type could be edited and published by lowest role for registered user.
 
 == Changelog ==
 
+= 1.0.5 =
+* Change base language to english, change plugin name (keep old post_type name)
+
 = 1.0.4 =
-* Darstellung des Interaktiv-Typs über Child-Template
+* View of post type by separate child template
 
 = 1.0.3 =
-* Plugin umbenannt
+* Rename Plugin
 
 = 1.0.2 =
-* Anlegen von Kategorien und Erweiterung der Standardrechte in separates Plugin ausgelagert
+* Move creation of taxonomies and rights enhancements to new plugin
 
 = 1.0.1 =
-* Rechte für der Inhaltstyp "Interaktiv" verbessert und Eigenschaften verbessert
+* Change rights and settings for post type "interaktiv"
 
 = 1.0.0 =
-* neuer Inhaltstyp "Interaktiv"
+* new post type "interaktiv"
 
 = 0.0.1 =
-* erste Test-Version
+* initial version
 
 

@@ -86,7 +86,7 @@ msgid "https://github.com/HenryJobst"
 msgstr ""
 
 #. URI of the plugin
-msgid "https://github.com/HenryJobst/interaktiv-plugin"
+msgid "https://github.com/HenryJobst/open-bulletin-board-plugin"
 msgstr ""
 
 #: open-bulletin-board-plugin.php:268

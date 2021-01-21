@@ -1,0 +1,193 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Interaktiv Plugin\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-02-17 21:18+0000\n"
+"PO-Revision-Date: 2020-02-17 21:19+0000\n"
+"Last-Translator: admin <netcup@jobst-berlin.de>\n"
+"Language-Team: English (United States)\n"
+"Language: en_US\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.3.1; wp-5.3.2"
+
+#: interaktiv-plugin.php:250 interaktiv-plugin.php:251
+#: interaktiv-plugin.php:252 interaktiv-plugin.php:253
+#: interaktiv-plugin.php:308
+msgid "Interaktiv"
+msgstr ""
+
+#: interaktiv-plugin.php:254
+msgid "Archiv"
+msgstr ""
+
+#: interaktiv-plugin.php:255
+msgid "Attribute"
+msgstr ""
+
+#: interaktiv-plugin.php:256
+msgid "Eltern Eintrag:"
+msgstr ""
+
+#: interaktiv-plugin.php:257
+msgid "Alle Einträge"
+msgstr ""
+
+#: interaktiv-plugin.php:258 interaktiv-plugin.php:260
+msgid "Neuer Eintrag"
+msgstr ""
+
+#: interaktiv-plugin.php:259
+msgid "Erstellen"
+msgstr ""
+
+#: interaktiv-plugin.php:261
+msgid "Bearbeite Eintrag"
+msgstr ""
+
+#: interaktiv-plugin.php:262
+msgid "Aktualisiere Eintrag"
+msgstr ""
+
+#: interaktiv-plugin.php:263
+msgid "Zeige Eintrag"
+msgstr ""
+
+#: interaktiv-plugin.php:264
+msgid "Zeige Einträge"
+msgstr ""
+
+#: interaktiv-plugin.php:265
+msgid "Suche Einträge"
+msgstr ""
+
+#: interaktiv-plugin.php:266
+msgid "Nicht gefunden"
+msgstr ""
+
+#: interaktiv-plugin.php:267
+msgid "Nicht im Papierkorb gefunden"
+msgstr ""
+
+#: interaktiv-plugin.php:268
+msgid "Bild"
+msgstr ""
+
+#: interaktiv-plugin.php:269
+msgid "Setze Bild"
+msgstr ""
+
+#: interaktiv-plugin.php:270
+msgid "Entferne Bild"
+msgstr ""
+
+#: interaktiv-plugin.php:271
+msgid "Nutze als Bild"
+msgstr ""
+
+#: interaktiv-plugin.php:272
+msgid "Füge dem Eintrag hinzu"
+msgstr ""
+
+#: interaktiv-plugin.php:273
+msgid "Upload für den Eintrag"
+msgstr ""
+
+#: interaktiv-plugin.php:274
+msgid "Eintragsliste"
+msgstr ""
+
+#: interaktiv-plugin.php:275
+msgid "Eintragsliste Navigation"
+msgstr ""
+
+#: interaktiv-plugin.php:276
+msgid "Filtere Eintragsliste"
+msgstr ""
+
+#: interaktiv-plugin.php:277
+msgid "Eintrag veröffentlicht."
+msgstr ""
+
+#: interaktiv-plugin.php:278
+msgid "Eintrag privat veröffentlicht"
+msgstr ""
+
+#: interaktiv-plugin.php:279
+msgid "Eintrag zum Entwurf zurückgestuft."
+msgstr ""
+
+#: interaktiv-plugin.php:280
+msgid "Eintrag eingeplant."
+msgstr ""
+
+#: interaktiv-plugin.php:281
+msgid "Eintrag aktualisiert"
+msgstr ""
+
+#: interaktiv-plugin.php:309
+msgid "Grünes Brett etc."
+msgstr ""
+
+#: interaktiv-plugin.php:357 interaktiv-plugin.php:558
+msgid "Name"
+msgstr ""
+
+#: interaktiv-plugin.php:358 interaktiv-plugin.php:559
+msgid "Homepage"
+msgstr ""
+
+#: interaktiv-plugin.php:359 interaktiv-plugin.php:560
+#: interaktiv-plugin.php:779
+msgid "Telefon"
+msgstr ""
+
+#: interaktiv-plugin.php:360 interaktiv-plugin.php:561
+#: interaktiv-plugin.php:785
+msgid "E-Mail"
+msgstr ""
+
+#: interaktiv-plugin.php:361 interaktiv-plugin.php:565
+msgid "Ort"
+msgstr ""
+
+#: interaktiv-plugin.php:556
+msgid "Titel"
+msgstr ""
+
+#: interaktiv-plugin.php:557
+msgid "Inhalt"
+msgstr ""
+
+#: interaktiv-plugin.php:562
+msgid "Autor"
+msgstr "Author"
+
+#: interaktiv-plugin.php:563
+msgid "Schlagwörter"
+msgstr ""
+
+#: interaktiv-plugin.php:564
+msgid "Kommentare"
+msgstr ""
+
+#: interaktiv-plugin.php:566
+msgid "Datum"
+msgstr ""
+
+#: interaktiv-plugin.php:773
+msgid "Seite"
+msgstr ""
+
+#. Name of the plugin
+msgid "Interaktiv Plugin"
+msgstr ""
+
+#. Description of the plugin
+msgid ""
+"This plugin add a new custom post type \"Interaktiv\", which is editable for "
+"all registered users."
+msgstr ""

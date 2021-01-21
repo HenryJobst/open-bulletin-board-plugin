@@ -10,6 +10,9 @@ Es wird der Inhaltstyp "Interaktiv" hinzugefügt, welcher bereits von einem Abon
 
 == Changelog ==
 
+= 1.0.4 =
+* Darstellung des Interaktiv-Typs über Child-Template
+
 = 1.0.3 =
 * Plugin umbenannt
 

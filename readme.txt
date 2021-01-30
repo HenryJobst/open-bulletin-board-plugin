@@ -10,6 +10,9 @@ The new post type could be edited and published by lowest role for registered us
 
 == Changelog ==
 
+= 1.0.6 =
+* Remove post-formats from supports array in custom post type declaration to enable preview of entries
+
 = 1.0.5 =
 * Change base language to english, change plugin name (keep old post_type name)
 

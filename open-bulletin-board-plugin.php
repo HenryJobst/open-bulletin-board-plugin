@@ -4,7 +4,7 @@
 Plugin Name: Open Bulletin Board Plugin
 Plugin URI: https://github.com/HenryJobst/open-bulletin-board-plugin
 Description: This plugin add a new custom post type "Bulletin board" (post_type name "interaktiv"), which is editable for all registered users.
-Version: 1.0.5
+Version: 1.0.6
 Author: Henry Jobst
 Author URI: https://github.com/HenryJobst
 Text Domain: open-bulletin-board-plugin-text-domain
@@ -308,7 +308,7 @@ class OpenBulletinBoardPlugin
             'label' => __('Bulletin board', 'open-bulletin-board-plugin-text-domain'),
             'description' => __('Digital bulletin board', 'open-bulletin-board-plugin-text-domain'),
             'labels' => $labels,
-            'supports' => array(self::AUTHOR, self::TITLE, 'editor', 'comments', 'post-formats'),
+            'supports' => array(self::AUTHOR, self::TITLE, 'editor', 'comments'),
             'taxonomies' => array(self::POST_TAG),
             'hierarchical' => false,
             'public' => true,
@@ -326,7 +326,7 @@ class OpenBulletinBoardPlugin
             'capabilities' => $capabilities,
             'meta_map_cap' => false,
             'delete_with_user' => false, // keep content when user will be deleted or trashed
-            'rewrite' => array('slug' => __(self::OPEN_BULLETIN_BOARD_POST_TYPE), 'with_front' => false),
+            'rewrite' => array('slug' => self::OPEN_BULLETIN_BOARD_POST_TYPE, 'with_front' => false),
         );
         register_post_type(self::OPEN_BULLETIN_BOARD_POST_TYPE, $args);
 

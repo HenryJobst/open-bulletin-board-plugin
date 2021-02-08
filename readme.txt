@@ -10,6 +10,9 @@ The new post type could be edited and published by lowest role for registered us
 
 == Changelog ==
 
+= 1.0.7 =
+* add a widget to show a list of posts
+
 = 1.0.6 =
 * Remove post-formats from supports array in custom post type declaration to enable preview of entries
 

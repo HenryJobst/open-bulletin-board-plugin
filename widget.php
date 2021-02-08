@@ -18,23 +18,6 @@ class Open_Bulletin_Board_Plugin_Widget extends WP_Widget {
     }
 
     /**
-     * @param string $date_format date format
-     * @return false|string
-     */
-    private function get_formated_event_date(string $date_format): string
-    {
-        $formated_event_date = '';
-        $date_field = get_the_date();
-        if ($date_field) {
-            $event_date = date_timestamp_get(date_create_immutable_from_format('Y-m-d', $date_field));
-            if ($event_date) {
-                $formated_event_date = wp_date($date_format, $event_date);
-            }
-        }
-        return $formated_event_date;
-    }
-
-    /**
      * Outputs the HTML for this widget.
      *
      * @param array  An array of standard parameters for widgets in this theme
@@ -80,9 +63,8 @@ class Open_Bulletin_Board_Plugin_Widget extends WP_Widget {
                     $excerpt = wp_trim_words( strip_shortcodes( get_the_content() ), $length );
                 }
 
-                $formated_event_date = $this->get_formated_event_date($date_format);
-                $output = $output . '<a class="title" href="' . get_permalink() . '">' . get_the_title() . '</a> <span class="date nobr">' . $formated_event_date . '</span> ';
-                $output = $output . '<span class="author nobr">' . esc_html__('by', 'open-bulletin-board-plugin-text-domain') . get_the_author() . '</span>';
+                $output = $output . '<a class="title" href="' . get_permalink() . '">' . get_the_title() . '</a> <span class="date nobr">' . get_the_date($date_format) . '</span> ';
+                $output = $output . '<span class="author nobr">' . esc_html__('by', 'open-bulletin-board-plugin-text-domain') . '&nbsp;' . get_the_author() . '</span>';
                 $output = $output . '<div class="excerpt">' . $excerpt . '</div>';
                 echo '<li class="listing-item">' . apply_filters( 'opbbrd_posts_widget_output', $output, $post ) . '</li>';
 

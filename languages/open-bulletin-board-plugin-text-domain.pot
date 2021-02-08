@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Open Bulletin Board Plugin\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-21 20:02+0000\n"
+"POT-Creation-Date: 2021-02-08 19:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -16,69 +16,85 @@ msgstr ""
 "X-Loco-Version: 2.5.0; wp-5.6\n"
 "X-Domain: open-bulletin-board-plugin-text-domain"
 
-#: open-bulletin-board-plugin.php:259
+#: open-bulletin-board-plugin.php:261
 msgid "Add new"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:258
+#: open-bulletin-board-plugin.php:260
 msgid "Add new item"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:257
+#: open-bulletin-board-plugin.php:259
 msgid "All items"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:254
+#: open-bulletin-board-plugin.php:256
 msgid "Archives"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:255
+#: open-bulletin-board-plugin.php:257
 msgid "Attributes"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:562
+#: open-bulletin-board-plugin.php:564
 msgid "Autor"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:252 open-bulletin-board-plugin.php:253
-#: open-bulletin-board-plugin.php:308
+#: open-bulletin-board-plugin.php:254 open-bulletin-board-plugin.php:255 
+#: open-bulletin-board-plugin.php:310
 msgid "Bulletin board"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:251
+#: open-bulletin-board-plugin.php:253
 msgid "Bulletin board item"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:250
+#: open-bulletin-board-plugin.php:252
 msgid "Bulletin board items"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:564
-msgid "Comment"
-msgstr ""
-
-#: open-bulletin-board-plugin.php:557
-msgid "Content"
+#: widget.php:85
+msgid "by"
 msgstr ""
 
 #: open-bulletin-board-plugin.php:566
+msgid "Comment"
+msgstr ""
+
+#: open-bulletin-board-plugin.php:559
+msgid "Content"
+msgstr ""
+
+#: widget.php:138
+msgid "d. F Y"
+msgstr ""
+
+#: open-bulletin-board-plugin.php:568
 msgid "Date"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:309
+#: widget.php:146
+msgid "Date Format:"
+msgstr ""
+
+#: open-bulletin-board-plugin.php:311
 msgid "Digital bulletin board"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:261
+#: open-bulletin-board-plugin.php:263
 msgid "Edit item"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:276
+#: open-bulletin-board-plugin.php:278
 msgid "Filter items list"
 msgstr ""
 
 #. Author of the plugin
 msgid "Henry Jobst"
+msgstr ""
+
+#: widget.php:143
+msgid "How Many:"
 msgstr ""
 
 #. Author URI of the plugin
@@ -89,63 +105,71 @@ msgstr ""
 msgid "https://github.com/HenryJobst/open-bulletin-board-plugin"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:268
+#: open-bulletin-board-plugin.php:270
 msgid "Image"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:272
+#: open-bulletin-board-plugin.php:274
 msgid "Insert into item"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:277
+#: open-bulletin-board-plugin.php:279
 msgid "Item published"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:278
+#: open-bulletin-board-plugin.php:280
 msgid "Item published privately"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:279
+#: open-bulletin-board-plugin.php:281
 msgid "Item reverted to draft"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:280
+#: open-bulletin-board-plugin.php:282
 msgid "Item scheduled"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:281
+#: open-bulletin-board-plugin.php:283
 msgid "Item updated"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:274
+#: open-bulletin-board-plugin.php:276
 msgid "Items list"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:275
+#: open-bulletin-board-plugin.php:277
 msgid "Items list navigation"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:361 open-bulletin-board-plugin.php:565
+#: open-bulletin-board-plugin.php:363 open-bulletin-board-plugin.php:567
 msgid "Location"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:360 open-bulletin-board-plugin.php:561
+#: open-bulletin-board-plugin.php:362 open-bulletin-board-plugin.php:563
 msgid "Mail"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:357 open-bulletin-board-plugin.php:558
+#: widget.php:145
+msgid "More Link:"
+msgstr ""
+
+#: widget.php:144
+msgid "More Text:"
+msgstr ""
+
+#: open-bulletin-board-plugin.php:359 open-bulletin-board-plugin.php:560
 msgid "Name"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:260
+#: open-bulletin-board-plugin.php:262
 msgid "New item"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:266
+#: open-bulletin-board-plugin.php:268
 msgid "Not found"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:267
+#: open-bulletin-board-plugin.php:269
 msgid "Not found in trash bin"
 msgstr ""
 
@@ -153,27 +177,39 @@ msgstr ""
 msgid "Open Bulletin Board Plugin"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:256
+#: widget.php:17
+msgid "Open Bulletin Board Posts"
+msgstr ""
+
+#: open-bulletin-board-plugin.php:258
 msgid "Parent item:"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:359 open-bulletin-board-plugin.php:560
+#: widget.php:137
+msgid "Permalink to the page that show all events"
+msgstr ""
+
+#: open-bulletin-board-plugin.php:361 open-bulletin-board-plugin.php:562
 msgid "Phone"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:270
+#: open-bulletin-board-plugin.php:272
 msgid "Remove image"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:265
+#: open-bulletin-board-plugin.php:267
 msgid "Search items"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:269
+#: open-bulletin-board-plugin.php:271
 msgid "Set image"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:563
+#: widget.php:136
+msgid "Show All"
+msgstr ""
+
+#: open-bulletin-board-plugin.php:565
 msgid "Tags"
 msgstr ""
 
@@ -183,30 +219,38 @@ msgid ""
 "\"interaktiv\"), which is editable for all registered users."
 msgstr ""
 
-#: open-bulletin-board-plugin.php:556
+#: open-bulletin-board-plugin.php:558
 msgid "Title"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:262
-msgid "Update item"
+#: widget.php:142
+msgid "Title:"
 msgstr ""
 
-#: open-bulletin-board-plugin.php:273
-msgid "Upload to this item"
-msgstr ""
-
-#: open-bulletin-board-plugin.php:358 open-bulletin-board-plugin.php:559
-msgid "URL"
-msgstr ""
-
-#: open-bulletin-board-plugin.php:271
-msgid "Use image"
-msgstr ""
-
-#: open-bulletin-board-plugin.php:263
-msgid "View item"
+#: widget.php:134
+msgid "Upcoming Events"
 msgstr ""
 
 #: open-bulletin-board-plugin.php:264
+msgid "Update item"
+msgstr ""
+
+#: open-bulletin-board-plugin.php:275
+msgid "Upload to this item"
+msgstr ""
+
+#: open-bulletin-board-plugin.php:360 open-bulletin-board-plugin.php:561
+msgid "URL"
+msgstr ""
+
+#: open-bulletin-board-plugin.php:273
+msgid "Use image"
+msgstr ""
+
+#: open-bulletin-board-plugin.php:265
+msgid "View item"
+msgstr ""
+
+#: open-bulletin-board-plugin.php:266
 msgid "View items"
 msgstr ""

@@ -3,82 +3,98 @@ msgstr ""
 "Project-Id-Version: Open Bulletin Board Plugin\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-01-21 20:02+0000\n"
-"PO-Revision-Date: 2021-01-21 20:22+0000\n"
-"Last-Translator: admin\n"
+"PO-Revision-Date: 2021-02-08 19:32+0000\n"
+"Last-Translator: \n"
 "Language-Team: Deutsch\n"
-"Language: de_DE\n"
+"Language: de-DE\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.5.0; wp-5.6\n"
+"X-Loco-Version: 2.5.0; wp-5.6.1\n"
 "X-Domain: open-bulletin-board-plugin-text-domain"
 
-#: open-bulletin-board-plugin.php:259
+#: open-bulletin-board-plugin.php:261
 msgid "Add new"
 msgstr "Hinzufügen"
 
-#: open-bulletin-board-plugin.php:258
+#: open-bulletin-board-plugin.php:260
 msgid "Add new item"
 msgstr "Neuen Eintrag hinzufügen"
 
-#: open-bulletin-board-plugin.php:257
+#: open-bulletin-board-plugin.php:259
 msgid "All items"
 msgstr "Alle Einträge"
 
-#: open-bulletin-board-plugin.php:254
+#: open-bulletin-board-plugin.php:256
 msgid "Archives"
 msgstr "Archiv"
 
-#: open-bulletin-board-plugin.php:255
+#: open-bulletin-board-plugin.php:257
 msgid "Attributes"
 msgstr "Eigenschaften"
 
-#: open-bulletin-board-plugin.php:562
+#: open-bulletin-board-plugin.php:564
 msgid "Autor"
 msgstr "Autor"
 
-#: open-bulletin-board-plugin.php:252 open-bulletin-board-plugin.php:253
-#: open-bulletin-board-plugin.php:308
+#: open-bulletin-board-plugin.php:254 open-bulletin-board-plugin.php:255 
+#: open-bulletin-board-plugin.php:310
 msgid "Bulletin board"
 msgstr "Schwarzes Brett"
 
-#: open-bulletin-board-plugin.php:251
+#: open-bulletin-board-plugin.php:253
 msgid "Bulletin board item"
 msgstr "Schwarzes Brett Eintrag"
 
-#: open-bulletin-board-plugin.php:250
+#: open-bulletin-board-plugin.php:252
 msgid "Bulletin board items"
 msgstr "Schwarzes Brett Einträge"
 
-#: open-bulletin-board-plugin.php:564
+#: widget.php:85
+msgid "by"
+msgstr "von"
+
+#: open-bulletin-board-plugin.php:566
 msgid "Comment"
 msgstr "Kommentar"
 
-#: open-bulletin-board-plugin.php:557
+#: open-bulletin-board-plugin.php:559
 msgid "Content"
 msgstr "Inhalt"
 
-#: open-bulletin-board-plugin.php:566
+#: widget.php:138
+msgid "d. F Y"
+msgstr "d. F Y"
+
+#: open-bulletin-board-plugin.php:568
 msgid "Date"
 msgstr "Datum"
 
-#: open-bulletin-board-plugin.php:309
+#: widget.php:146
+msgid "Date Format:"
+msgstr "Datums Format:"
+
+#: open-bulletin-board-plugin.php:311
 msgid "Digital bulletin board"
 msgstr "Digitales Schwarzes Brett"
 
-#: open-bulletin-board-plugin.php:261
+#: open-bulletin-board-plugin.php:263
 msgid "Edit item"
 msgstr "Eintrag bearbeiten"
 
-#: open-bulletin-board-plugin.php:276
+#: open-bulletin-board-plugin.php:278
 msgid "Filter items list"
 msgstr "Einträge filtern"
 
 #. Author of the plugin
 msgid "Henry Jobst"
 msgstr "Henry Jobst"
+
+#: widget.php:143
+msgid "How Many:"
+msgstr "Wie viele:"
 
 #. Author URI of the plugin
 msgid "https://github.com/HenryJobst"
@@ -88,63 +104,71 @@ msgstr "https://github.com/HenryJobst"
 msgid "https://github.com/HenryJobst/open-bulletin-board-plugin"
 msgstr "https://github.com/HenryJobst/open-bulletin-board-plugin"
 
-#: open-bulletin-board-plugin.php:268
+#: open-bulletin-board-plugin.php:270
 msgid "Image"
 msgstr "Bild"
 
-#: open-bulletin-board-plugin.php:272
+#: open-bulletin-board-plugin.php:274
 msgid "Insert into item"
 msgstr "In den Eintrag einfügen"
 
-#: open-bulletin-board-plugin.php:277
+#: open-bulletin-board-plugin.php:279
 msgid "Item published"
 msgstr "Eintrag veröffentlichen"
 
-#: open-bulletin-board-plugin.php:278
+#: open-bulletin-board-plugin.php:280
 msgid "Item published privately"
 msgstr "Eintrag privat veröffentlichen"
 
-#: open-bulletin-board-plugin.php:279
+#: open-bulletin-board-plugin.php:281
 msgid "Item reverted to draft"
 msgstr "Eintrag zu Entwurf zurückstellen"
 
-#: open-bulletin-board-plugin.php:280
+#: open-bulletin-board-plugin.php:282
 msgid "Item scheduled"
 msgstr "Eintrag planen"
 
-#: open-bulletin-board-plugin.php:281
+#: open-bulletin-board-plugin.php:283
 msgid "Item updated"
 msgstr "Eintrag aktualisiert"
 
-#: open-bulletin-board-plugin.php:274
+#: open-bulletin-board-plugin.php:276
 msgid "Items list"
 msgstr "Eintragsliste"
 
-#: open-bulletin-board-plugin.php:275
+#: open-bulletin-board-plugin.php:277
 msgid "Items list navigation"
 msgstr "Eintragslistennavigation"
 
-#: open-bulletin-board-plugin.php:361 open-bulletin-board-plugin.php:565
+#: open-bulletin-board-plugin.php:363 open-bulletin-board-plugin.php:567
 msgid "Location"
 msgstr "Ort"
 
-#: open-bulletin-board-plugin.php:360 open-bulletin-board-plugin.php:561
+#: open-bulletin-board-plugin.php:362 open-bulletin-board-plugin.php:563
 msgid "Mail"
 msgstr "E-Mail"
 
-#: open-bulletin-board-plugin.php:357 open-bulletin-board-plugin.php:558
+#: widget.php:145
+msgid "More Link:"
+msgstr "Mehr Link:"
+
+#: widget.php:144
+msgid "More Text:"
+msgstr "Mehr Text:"
+
+#: open-bulletin-board-plugin.php:359 open-bulletin-board-plugin.php:560
 msgid "Name"
 msgstr "Name"
 
-#: open-bulletin-board-plugin.php:260
+#: open-bulletin-board-plugin.php:262
 msgid "New item"
 msgstr "Neuer Eintrag"
 
-#: open-bulletin-board-plugin.php:266
+#: open-bulletin-board-plugin.php:268
 msgid "Not found"
 msgstr "Nicht gefunden"
 
-#: open-bulletin-board-plugin.php:267
+#: open-bulletin-board-plugin.php:269
 msgid "Not found in trash bin"
 msgstr "Nicht im Papierkorb gefunden"
 
@@ -152,27 +176,39 @@ msgstr "Nicht im Papierkorb gefunden"
 msgid "Open Bulletin Board Plugin"
 msgstr "Schwarzes Brett Plugin"
 
-#: open-bulletin-board-plugin.php:256
+#: widget.php:17
+msgid "Open Bulletin Board Posts"
+msgstr "Schwarzes Brett Beiträge"
+
+#: open-bulletin-board-plugin.php:258
 msgid "Parent item:"
 msgstr "Eltern-Eintrag:"
 
-#: open-bulletin-board-plugin.php:359 open-bulletin-board-plugin.php:560
+#: widget.php:137
+msgid "Permalink to the page that show all events"
+msgstr "Permalink zur Seite mit allen Veranstaltungen"
+
+#: open-bulletin-board-plugin.php:361 open-bulletin-board-plugin.php:562
 msgid "Phone"
 msgstr "Telefon"
 
-#: open-bulletin-board-plugin.php:270
+#: open-bulletin-board-plugin.php:272
 msgid "Remove image"
 msgstr "Bild entfernen"
 
-#: open-bulletin-board-plugin.php:265
+#: open-bulletin-board-plugin.php:267
 msgid "Search items"
 msgstr "Eintrag suchen"
 
-#: open-bulletin-board-plugin.php:269
+#: open-bulletin-board-plugin.php:271
 msgid "Set image"
 msgstr "Bild eintragen"
 
-#: open-bulletin-board-plugin.php:563
+#: widget.php:136
+msgid "Show All"
+msgstr "Zeige alle"
+
+#: open-bulletin-board-plugin.php:565
 msgid "Tags"
 msgstr "Schlagworte"
 
@@ -184,30 +220,38 @@ msgstr ""
 "Dieses Plugin ergänzt einen neuen Beitragstyp, welcher von allen "
 "registrierten Nutzern voll bearbeitbar und veröffentlichbar ist."
 
-#: open-bulletin-board-plugin.php:556
+#: open-bulletin-board-plugin.php:558
 msgid "Title"
 msgstr "Titel"
 
-#: open-bulletin-board-plugin.php:262
+#: widget.php:142
+msgid "Title:"
+msgstr "Titel:"
+
+#: widget.php:134
+msgid "Upcoming Events"
+msgstr "Kommende Veranstaltungen"
+
+#: open-bulletin-board-plugin.php:264
 msgid "Update item"
 msgstr "Eintrag aktualisieren"
 
-#: open-bulletin-board-plugin.php:273
+#: open-bulletin-board-plugin.php:275
 msgid "Upload to this item"
 msgstr "Hochladen zu diesem Eintrag"
 
-#: open-bulletin-board-plugin.php:358 open-bulletin-board-plugin.php:559
+#: open-bulletin-board-plugin.php:360 open-bulletin-board-plugin.php:561
 msgid "URL"
 msgstr "URL"
 
-#: open-bulletin-board-plugin.php:271
+#: open-bulletin-board-plugin.php:273
 msgid "Use image"
 msgstr "Bild verwenden"
 
-#: open-bulletin-board-plugin.php:263
+#: open-bulletin-board-plugin.php:265
 msgid "View item"
 msgstr "Eintrag anzeigen"
 
-#: open-bulletin-board-plugin.php:264
+#: open-bulletin-board-plugin.php:266
 msgid "View items"
 msgstr "Einträge anzeigen"

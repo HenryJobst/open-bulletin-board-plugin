@@ -39,6 +39,19 @@ class Open_Bulletin_Board_Plugin_Widget extends WP_Widget {
             'post_type'      => OpenBulletinBoardPlugin::OPEN_BULLETIN_BOARD_POST_TYPE,
             'posts_per_page' => $count,
             'orderby' => array('date' =>'DESC'),
+            'meta_query'     => array(
+                'relation' => 'OR',
+                array(
+                    'key'     => 'hidden',
+                    'value'   => '1',
+                    'compare' => '!=',
+                ),
+                array(
+                    'key'     => 'hidden',
+                    'compare' => 'NOT EXISTS',
+                    'value' => 'null',
+                )
+            ),
         ) );
 
         if ( $loop->have_posts() ):

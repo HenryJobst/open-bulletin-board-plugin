@@ -10,6 +10,9 @@ The new post type could be edited and published by lowest role for registered us
 
 == Changelog ==
 
+= 1.0.9 =
+* add comment count in widget
+
 = 1.0.8 =
 * hide marked posts (meta_key: hidden, meta_value: 1) in widget
 

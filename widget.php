@@ -77,7 +77,14 @@ class Open_Bulletin_Board_Plugin_Widget extends WP_Widget {
                 }
 
                 $output = $output . '<a class="title" href="' . get_permalink() . '">' . get_the_title() . '</a> <span class="date nobr">' . get_the_date($date_format) . '</span> ';
-                $output = $output . '<span class="author nobr">' . esc_html__('by', 'open-bulletin-board-plugin-text-domain') . '&nbsp;' . get_the_author() . '</span>';
+                $output = $output . '<span class="author nobr">' . esc_html__('by', 'open-bulletin-board-plugin-text-domain') . '&nbsp;' . get_the_author();
+                
+                if ( post_has_comment($post->ID) ) {
+                    $output = $output . '&nbsp;<a href="' . get_permalink() . '#comments" data-wpel-link="internal">' . post_comment_count($post->ID) . post_comment_text($post->ID) . '</a>';
+                }
+
+                $output = $output . '</span>';
+
                 $output = $output . '<div class="excerpt">' . $excerpt . '</div>';
                 echo '<li class="listing-item">' . apply_filters( 'opbbrd_posts_widget_output', $output, $post ) . '</li>';
 
@@ -114,6 +121,28 @@ class Open_Bulletin_Board_Plugin_Widget extends WP_Widget {
         $instance['date_format'] = esc_attr( $new_instance['date_format'] );
 
         return $instance;
+    }
+
+    function post_comment_count($post_id) {
+        $type = 'comments';
+        $comments = get_comments('status=approve&type=' . $type . '&post_id=' . $post_id );
+        $comments = separate_comments( $comments );
+        
+        return count( $comments[ $type ] );
+    }
+    
+    function post_has_comment($post_id) {
+        return 0 < post_comment_count($post_id);
+    }
+
+    function post_comment_text($post_id) {
+        $count = post_comment_count($post_id);
+        if ( $count == 1 ) {
+            return esc_html__('comment','open-bulletin-board-plugin-text-domain');
+        } else if ( $count > 1 ) {
+            return esc_html__('comments','open-bulletin-board-plugin-text-domain');
+        }
+        return '';
     }
 
     /**

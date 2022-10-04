@@ -4,13 +4,13 @@
 Plugin Name: Open Bulletin Board Plugin
 Plugin URI: https://github.com/HenryJobst/open-bulletin-board-plugin
 Description: This plugin add a new custom post type "Bulletin board" (post_type name "interaktiv"), which is editable for all registered users.
-Version: 1.0.8
+Version: 1.0.9
 Author: Henry Jobst
 Author URI: https://github.com/HenryJobst
 Text Domain: open-bulletin-board-plugin-text-domain
 License: MIT License
 
-Copyright (c) 2020-2021 {Author}
+Copyright (c) 2020-2022 {Author}
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

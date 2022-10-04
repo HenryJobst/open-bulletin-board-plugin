@@ -255,3 +255,11 @@ msgstr "Eintrag anzeigen"
 #: open-bulletin-board-plugin.php:266
 msgid "View items"
 msgstr "Einträge anzeigen"
+
+#: widget.php:141
+msgid "comment"
+msgstr "Kommentar"
+
+#: widget.php:143
+msgid "comments"
+msgstr "Kommentare"
